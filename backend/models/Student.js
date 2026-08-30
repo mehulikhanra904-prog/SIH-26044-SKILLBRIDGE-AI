@@ -14,6 +14,10 @@ const studentSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    department: {
+      type: String,
+      trim: true,
+    },
     course: {
       type: String,
       trim: true,
@@ -27,6 +31,23 @@ const studentSchema = new mongoose.Schema(
     },
     resumeUrl: {
       type: String,
+      trim: true,
+    },
+    phone: {
+      type: String,
+      trim: true,
+    },
+    location: {
+      type: String,
+      trim: true,
+    },
+    preferredRole: {
+      type: String,
+      trim: true,
+    },
+    preferredDomain: {
+      type: String,
+      trim: true,
     },
   },
   { timestamps: true }

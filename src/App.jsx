@@ -23,6 +23,7 @@ import PlacementAnalytics from "./pages/college/PlacementAnalytics";
 import CompanyDashboard from "./pages/company/CompanyDashboard";
 import CreateJob from "./pages/company/CreateJob";
 import MyJobs from "./pages/company/MyJobs";
+import JobDetails from "./pages/company/jobDetails";
 import CompanyProfile from "./pages/company/CompanyProfile";
 import Candidates from "./pages/company/Candidates";
 import CompanyApplications from "./pages/company/CompanyApplications";
@@ -140,7 +141,7 @@ function App() {
   />
   <Route
     path="/company/jobs/:id"
-    element={<jobDetails />}
+    element={<JobDetails />}
   />
   <Route
     path="/company/applications"

@@ -5,6 +5,10 @@ const connectDB = require("./config/db");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
 const authRoutes = require("./routes/authRoutes");
+const applicationRoutes = require("./routes/applicationRoutes");
+const companyRoutes = require("./routes/companyRoutes");
+const jobRoutes = require("./routes/jobRoutes");
+const studentRoutes = require("./routes/studentRoutes");
 const testRoutes = require("./routes/testRoutes");
 
 // Connect to MongoDB Atlas
@@ -23,6 +27,10 @@ app.get("/", (req, res) => {
 
 // --- API routes ---
 app.use("/api/auth", authRoutes);
+app.use("/api/applications", applicationRoutes);
+app.use("/api/companies", companyRoutes);
+app.use("/api/jobs", jobRoutes);
+app.use("/api/students", studentRoutes);
 app.use("/api", testRoutes); // exposes /api/student/ping etc.
 
 // --- Error handling (MUST be registered last) ---

@@ -1,483 +1,111 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
+import api from "../../services/api";
+
+const emptyProfile = {
+  name: "", email: "", phone: "", location: "", collegeName: "", course: "",
+  department: "", graduationYear: "", preferredRole: "", preferredDomain: "", skills: [],
+};
 
 function StudentProfile() {
-
-  const savedUser = JSON.parse(
-    localStorage.getItem("user")
-  ) || {
-    name: "",
-    email: "",
-    college: "",
-    department: "",
-    degree: "B.Tech",
-    graduationYear: "2029"
-  };
-
-  const [profile, setProfile] = useState({
-    name: savedUser.name || "",
-    email: savedUser.email || "",
-    college: savedUser.college || "",
-    department: savedUser.department || "Computer Science & Engineering",
-    degree: savedUser.degree || "B.Tech",
-    graduationYear: savedUser.graduationYear || "2029",
-    location: savedUser.location || "",
-    phone: savedUser.phone || "",
-    role: savedUser.role || "Full Stack Developer",
-    domain: savedUser.domain || "Software Development & AI"
-  });
-
+  const [profile, setProfile] = useState(emptyProfile);
   const [editing, setEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const { data } = await api.get("/students/profile");
+        const { profile: studentProfile, ...user } = data.student;
+        setProfile({ ...emptyProfile, ...user, ...studentProfile });
+      } catch (requestError) {
+        setError(requestError.response?.data?.message || "Unable to load your profile.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadProfile();
+  }, []);
 
-    setProfile({
-      ...profile,
-      [name]: value
-    });
+  const handleChange = ({ target: { name, value } }) => {
+    setProfile((current) => ({ ...current, [name]: value }));
   };
 
-  const handleSave = () => {
-
-    localStorage.setItem(
-      "user",
-      JSON.stringify(profile)
-    );
-
-    setEditing(false);
-
-    alert("Profile updated successfully!");
+  const handleSave = async () => {
+    try {
+      setError("");
+      const { data } = await api.put("/students/profile", profile);
+      const { profile: studentProfile, ...user } = data.student;
+      setProfile({ ...emptyProfile, ...user, ...studentProfile });
+      localStorage.setItem("user", JSON.stringify({ id: user.id, name: user.name, email: user.email, role: user.role }));
+      setEditing(false);
+    } catch (requestError) {
+      setError(requestError.response?.data?.message || "Unable to save your profile.");
+    }
   };
 
   const initials = profile.name
-    ? profile.name
-        .split(" ")
-        .map((word) => word[0])
-        .join("")
-        .substring(0, 2)
-        .toUpperCase()
+    ? profile.name.split(" ").map((word) => word[0]).join("").slice(0, 2).toUpperCase()
     : "ST";
+
+  if (loading) return <div className="dashboard-layout"><main className="main-content">Loading profile...</main></div>;
 
   return (
     <div className="dashboard-layout">
-
       <Sidebar type="student" />
-
       <main className="main-content">
-
-        <Navbar
-          title="Student Profile"
-          subtitle="Manage your personal information, skills and career profile."
-        />
-
-
-        {/* Profile Header */}
-
+        <Navbar title="Student Profile" subtitle="Manage your personal information, skills and career profile." />
+        {error && <p className="error-message">{error}</p>}
         <div className="student-profile-header card">
-
-          <div className="student-profile-avatar">
-            {initials}
-          </div>
-
+          <div className="student-profile-avatar">{initials}</div>
           <div className="student-profile-info">
-
-            <h1>
-              {profile.name || "Student Name"}
-            </h1>
-
-            <p>
-              {profile.degree}{" "}
-              {profile.department}
-            </p>
-
-            <span>
-              {profile.college || "College not added"}
-            </span>
-
+            <h1>{profile.name || "Student Name"}</h1>
+            <p>{[profile.course, profile.department].filter(Boolean).join(" · ") || "Academic details not added"}</p>
+            <span>{profile.collegeName || "College not added"}</span>
           </div>
-
-          <button
-            className="primary-button"
-            onClick={() => {
-              if (editing) {
-                handleSave();
-              } else {
-                setEditing(true);
-              }
-            }}
-          >
+          <button className="primary-button" onClick={() => (editing ? handleSave() : setEditing(true))}>
             {editing ? "Save Profile" : "Edit Profile"}
           </button>
-
         </div>
 
+        <ProfileSection title="Personal Information" subtitle="Your personal contact information.">
+          <ProfileInput label="Full Name" name="name" value={profile.name} onChange={handleChange} editing={editing} />
+          <ProfileInput label="Email" name="email" type="email" value={profile.email} onChange={handleChange} editing={editing} />
+          <ProfileInput label="Phone Number" name="phone" value={profile.phone} onChange={handleChange} editing={editing} />
+          <ProfileInput label="Location" name="location" value={profile.location} onChange={handleChange} editing={editing} />
+        </ProfileSection>
 
-        {/* Personal Information */}
-
-        <div className="card profile-card">
-
-          <div className="section-title">
-
-            <div>
-
-              <h2>
-                Personal Information
-              </h2>
-
-              <p>
-                Your personal contact information.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div className="profile-grid">
-
-            <div className="form-group">
-
-              <label>
-                Full Name
-              </label>
-
-              <input
-                type="text"
-                name="name"
-                value={profile.name}
-                onChange={handleChange}
-                disabled={!editing}
-                placeholder="Enter your full name"
-              />
-
-            </div>
-
-
-            <div className="form-group">
-
-              <label>
-                Email
-              </label>
-
-              <input
-                type="email"
-                name="email"
-                value={profile.email}
-                onChange={handleChange}
-                disabled={!editing}
-                placeholder="Enter your email"
-              />
-
-            </div>
-
-
-            <div className="form-group">
-
-              <label>
-                Phone Number
-              </label>
-
-              <input
-                type="text"
-                name="phone"
-                value={profile.phone}
-                onChange={handleChange}
-                disabled={!editing}
-                placeholder="Enter phone number"
-              />
-
-            </div>
-
-
-            <div className="form-group">
-
-              <label>
-                Location
-              </label>
-
-              <input
-                type="text"
-                name="location"
-                value={profile.location}
-                onChange={handleChange}
-                disabled={!editing}
-                placeholder="City, State"
-              />
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        {/* Academic Information */}
+        <ProfileSection title="Academic Information" subtitle="Your college and academic details.">
+          <ProfileInput label="College" name="collegeName" value={profile.collegeName} onChange={handleChange} editing={editing} />
+          <ProfileInput label="Degree" name="course" value={profile.course} onChange={handleChange} editing={editing} />
+          <ProfileInput label="Department" name="department" value={profile.department} onChange={handleChange} editing={editing} />
+          <ProfileInput label="Graduation Year" name="graduationYear" type="number" value={profile.graduationYear} onChange={handleChange} editing={editing} />
+        </ProfileSection>
 
         <div className="card profile-card">
-
-          <div className="section-title">
-
-            <div>
-
-              <h2>
-                Academic Information
-              </h2>
-
-              <p>
-                Your college and academic details.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div className="profile-grid">
-
-            <div className="form-group">
-
-              <label>
-                College
-              </label>
-
-              <input
-                type="text"
-                name="college"
-                value={profile.college}
-                onChange={handleChange}
-                disabled={!editing}
-                placeholder="Enter your college"
-              />
-
-            </div>
-
-
-            <div className="form-group">
-
-              <label>
-                Degree
-              </label>
-
-              <input
-                type="text"
-                name="degree"
-                value={profile.degree}
-                onChange={handleChange}
-                disabled={!editing}
-              />
-
-            </div>
-
-
-            <div className="form-group">
-
-              <label>
-                Department
-              </label>
-
-              <input
-                type="text"
-                name="department"
-                value={profile.department}
-                onChange={handleChange}
-                disabled={!editing}
-              />
-
-            </div>
-
-
-            <div className="form-group">
-
-              <label>
-                Graduation Year
-              </label>
-
-              <input
-                type="text"
-                name="graduationYear"
-                value={profile.graduationYear}
-                onChange={handleChange}
-                disabled={!editing}
-              />
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        {/* Technical Skills */}
-
-        <div className="card profile-card">
-
-          <div className="section-title">
-
-            <div>
-
-              <h2>
-                Technical Skills
-              </h2>
-
-              <p>
-                Skills added to your SkillBridge profile.
-              </p>
-
-            </div>
-
-          </div>
-
-
+          <div className="section-title"><div><h2>Technical Skills</h2><p>Skills stored in your SkillBridge profile.</p></div></div>
           <div className="skills-container">
-
-            <span className="skill-tag">C</span>
-            <span className="skill-tag">C++</span>
-            <span className="skill-tag">Python</span>
-            <span className="skill-tag">HTML</span>
-            <span className="skill-tag">CSS</span>
-            <span className="skill-tag">JavaScript</span>
-            <span className="skill-tag">React</span>
-            <span className="skill-tag">Node.js</span>
-            <span className="skill-tag">Git</span>
-
+            {profile.skills.length ? profile.skills.map((skill) => <span className="skill-tag" key={skill}>{skill}</span>) : <p>No skills added yet.</p>}
           </div>
-
         </div>
 
-
-        {/* Projects */}
-
-        <div className="card profile-card">
-
-          <div className="section-title">
-
-            <div>
-
-              <h2>
-                Projects
-              </h2>
-
-              <p>
-                Showcase your practical experience.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div className="project-list">
-
-            <div className="project-card">
-
-              <h3>
-                Add Your Project
-              </h3>
-
-              <p>
-                Add projects that demonstrate your technical
-                skills and practical experience.
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        {/* Career Preferences */}
-
-        <div className="card profile-card">
-
-          <div className="section-title">
-
-            <div>
-
-              <h2>
-                Career Preferences
-              </h2>
-
-              <p>
-                Tell companies what opportunities you prefer.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div className="profile-grid">
-
-            <div className="form-group">
-
-              <label>
-                Preferred Role
-              </label>
-
-              <input
-                type="text"
-                name="role"
-                value={profile.role}
-                onChange={handleChange}
-                disabled={!editing}
-              />
-
-            </div>
-
-
-            <div className="form-group">
-
-              <label>
-                Preferred Domain
-              </label>
-
-              <input
-                type="text"
-                name="domain"
-                value={profile.domain}
-                onChange={handleChange}
-                disabled={!editing}
-              />
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        {/* AI Analysis */}
-
-        <div className="ai-info">
-
-          <div className="ai-info-icon">
-            ✦
-          </div>
-
-          <div>
-
-            <strong>
-              AI Profile Analysis
-            </strong>
-
-            <p>
-              SkillBridge AI will analyze each student's
-              skills, projects, certifications and career
-              preferences to calculate skill gaps, readiness
-              and suitable job or internship recommendations.
-            </p>
-
-          </div>
-
-        </div>
-
+        <ProfileSection title="Career Preferences" subtitle="Tell companies what opportunities you prefer.">
+          <ProfileInput label="Preferred Role" name="preferredRole" value={profile.preferredRole} onChange={handleChange} editing={editing} />
+          <ProfileInput label="Preferred Domain" name="preferredDomain" value={profile.preferredDomain} onChange={handleChange} editing={editing} />
+        </ProfileSection>
       </main>
-
     </div>
   );
+}
+
+function ProfileSection({ title, subtitle, children }) {
+  return <div className="card profile-card"><div className="section-title"><div><h2>{title}</h2><p>{subtitle}</p></div></div><div className="profile-grid">{children}</div></div>;
+}
+
+function ProfileInput({ label, name, type = "text", value, onChange, editing }) {
+  return <div className="form-group"><label>{label}</label><input type={type} name={name} value={value ?? ""} onChange={onChange} disabled={!editing} /></div>;
 }
 
 export default StudentProfile;

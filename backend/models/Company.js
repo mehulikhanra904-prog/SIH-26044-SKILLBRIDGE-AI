@@ -21,9 +21,31 @@ const companySchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    location: {
+      type: String,
+      trim: true,
+    },
+    companySize: {
+      type: String,
+      trim: true,
+    },
+    hiringEmail: {
+      type: String,
+      trim: true,
+      lowercase: true,
+    },
     contactNumber: {
       type: String,
       trim: true,
+    },
+    about: {
+      type: String,
+      trim: true,
+      maxlength: 3000,
+    },
+    hiringDomains: {
+      type: [String],
+      default: [],
     },
   },
   { timestamps: true }

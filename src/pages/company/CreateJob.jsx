@@ -1,8 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
+import api from "../../services/api";
 
 function CreateJob() {
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -24,12 +29,22 @@ function CreateJob() {
     });
   };
 
-  const handleSubmit = (event) => {
+  const saveJob = async (status) => {
+    setError("");
+    setSubmitting(true);
+    try {
+      await api.post("/jobs", { ...formData, status });
+      navigate("/company/jobs");
+    } catch (requestError) {
+      setError(requestError.response?.data?.message || "Unable to save the job.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
-    alert("Job posted successfully!");
-
-    console.log("Job Data:", formData);
+    await saveJob("published");
   };
 
   return (
@@ -48,6 +63,7 @@ function CreateJob() {
           className="job-form card"
           onSubmit={handleSubmit}
         >
+          {error && <p className="error-message">{error}</p>}
 
           {/* Basic Information */}
 
@@ -346,6 +362,8 @@ function CreateJob() {
             <button
               type="button"
               className="secondary-button"
+              onClick={() => saveJob("draft")}
+              disabled={submitting}
             >
               Save Draft
             </button>
@@ -353,8 +371,9 @@ function CreateJob() {
             <button
               type="submit"
               className="primary-button"
+              disabled={submitting}
             >
-              Publish Job
+              {submitting ? "Saving..." : "Publish Job"}
             </button>
 
           </div>
