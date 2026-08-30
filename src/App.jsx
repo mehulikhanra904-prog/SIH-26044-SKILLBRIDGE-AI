@@ -1,3 +1,4 @@
+import { AuthProvider } from "./context/AuthContext";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
@@ -30,124 +31,126 @@ import "./App.css";
 
 function App() {
   return (
-    <BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
 
-      <Routes>
+        <Routes>
 
-        {/* ==================== AUTH ==================== */}
+          {/* ==================== AUTH ==================== */}
 
-        <Route
-          path="/"
-          element={<Login />}
-        />
+          <Route
+            path="/"
+            element={<Login />}
+          />
 
-        <Route
-          path="/register"
-          element={<Register />}
-        />
+          <Route
+            path="/register"
+            element={<Register />}
+          />
 
 
-        {/* ==================== STUDENT ==================== */}
+          {/* ==================== STUDENT ==================== */}
 
-        <Route
-          path="/student"
-          element={<StudentDashboard />}
-        />
+          <Route
+            path="/student"
+            element={<StudentDashboard />}
+          />
 
-        <Route
-          path="/student/profile"
-          element={<StudentProfile />}
-        />
+          <Route
+            path="/student/profile"
+            element={<StudentProfile />}
+          />
 
-        <Route
-          path="/student/skills"
-          element={<Skills />}
-        />
+          <Route
+            path="/student/skills"
+            element={<Skills />}
+          />
 
-        <Route
-          path="/student/resume"
-          element={<Resume />}
-        />
+          <Route
+            path="/student/resume"
+            element={<Resume />}
+          />
 
-        <Route
-          path="/student/skill-gap"
-          element={<SkillGap />}
-        />
+          <Route
+            path="/student/skill-gap"
+            element={<SkillGap />}
+          />
 
-        <Route
-          path="/student/roadmap"
-          element={<CareerRoadmap />}
-        />
+          <Route
+            path="/student/roadmap"
+            element={<CareerRoadmap />}
+          />
 
-        <Route
-          path="/student/jobs"
-          element={<Jobs />}
-        />
+          <Route
+            path="/student/jobs"
+            element={<Jobs />}
+          />
 
-        <Route
-          path="/student/internships"
-          element={<Internships />}
-        />
-        <Route
-  path="/student/applications"
-  element={<Applications />}
-/>
-<Route
-  path="/college"
-  element={<CollegeDashboard />}
-/>
-<Route
-  path="/college/students"
-  element={<Students />}
-/>
-<Route
-  path="/college/skill-analytics"
-  element={<SkillAnalytics />}
-/>
-<Route
-  path="/college/industry-demand"
-  element={<IndustryDemand />}
-/>
-<Route
-  path="/college/placements"
-  element={<PlacementAnalytics />}
-/>
-<Route
-  path="/company"
-  element={<CompanyDashboard />}
-/>
-<Route
-  path="/company/jobs/create"
-  element={<CreateJob />}
-/>
-<Route
-  path="/company/jobs"
-  element={<MyJobs />}
-/>
-<Route
-  path="/company/profile"
-  element={<CompanyProfile />}
-/>
-<Route
-  path="/company/internships"
-  element={<Internships />}
-/>
-<Route
-  path="/company/candidates"
-  element={<Candidates />}
-/>
-<Route
-  path="/company/jobs/:id"
-  element={<jobDetails />}
-/>
-<Route
-  path="/company/applications"
-  element={<CompanyApplications />}
-/>
+          <Route
+            path="/student/internships"
+            element={<Internships />}
+          />
+          <Route
+    path="/student/applications"
+    element={<Applications />}
+  />
+  <Route
+    path="/college"
+    element={<CollegeDashboard />}
+  />
+  <Route
+    path="/college/students"
+    element={<Students />}
+  />
+  <Route
+    path="/college/skill-analytics"
+    element={<SkillAnalytics />}
+  />
+  <Route
+    path="/college/industry-demand"
+    element={<IndustryDemand />}
+  />
+  <Route
+    path="/college/placements"
+    element={<PlacementAnalytics />}
+  />
+  <Route
+    path="/company"
+    element={<CompanyDashboard />}
+  />
+  <Route
+    path="/company/jobs/create"
+    element={<CreateJob />}
+  />
+  <Route
+    path="/company/jobs"
+    element={<MyJobs />}
+  />
+  <Route
+    path="/company/profile"
+    element={<CompanyProfile />}
+  />
+  <Route
+    path="/company/internships"
+    element={<Internships />}
+  />
+  <Route
+    path="/company/candidates"
+    element={<Candidates />}
+  />
+  <Route
+    path="/company/jobs/:id"
+    element={<jobDetails />}
+  />
+  <Route
+    path="/company/applications"
+    element={<CompanyApplications />}
+  />
 
-      </Routes>
+        </Routes>
 
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

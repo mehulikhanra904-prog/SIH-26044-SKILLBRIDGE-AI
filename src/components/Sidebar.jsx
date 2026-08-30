@@ -1,6 +1,15 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Sidebar({ type = "student" }) {
+
+  const { user, logout } = useAuth();
+  const navigate = useNavigate(); // ADDED
+
+  const handleLogout = () => {   // ADDED
+    logout();
+    navigate("/");
+  };
 
   const studentMenu = [
     { name: "Dashboard", path: "/student", icon: "⌂" },
@@ -109,38 +118,17 @@ function Sidebar({ type = "student" }) {
         <div className="sidebar-user">
 
           <div className="user-avatar">
-
-            {type === "college"
-              ? "C"
-              : type === "company"
-              ? "B"
-              : "M"
-            }
-
+            {user?.name ? user.name.charAt(0).toUpperCase() : "?"}
           </div>
 
           <div>
 
             <strong>
-
-              {type === "college"
-                ? "College Admin"
-                : type === "company"
-                ? "Company Admin"
-                : "Student"
-              }
-
+              {user?.name || "Guest"}
             </strong>
 
             <span>
-
-              {type === "college"
-                ? "college@example.com"
-                : type === "company"
-                ? "company@example.com"
-                : "student@email.com"
-              }
-
+              {user?.email || ""}
             </span>
 
           </div>
@@ -148,12 +136,12 @@ function Sidebar({ type = "student" }) {
         </div>
 
 
-        <NavLink
-          to="/"
+        <button
+          onClick={handleLogout}
           className="logout-button"
         >
           ↪ Logout
-        </NavLink>
+        </button>
 
       </div>
 

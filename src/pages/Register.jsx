@@ -1,35 +1,45 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 function Register() {
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("student");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
 
     e.preventDefault();
 
-    // Create user object
-    const user = {
-      name: name,
-      email: email,
-      password: password,
-      role: role
-    };
+    try {
 
-    // Save user in browser
-    localStorage.setItem(
-      "user",
-      JSON.stringify(user)
-    );
+      const res = await api.post("/auth/register", {
+        name,
+        email,
+        password,
+        role
+      });
 
-    // Go to login page
-    navigate("/");
+      // Save the REAL user + token from the backend
+      login(res.data.user, res.data.token);
+
+      // Go to login page
+      navigate("/");
+
+    } catch (err) {
+
+      alert(
+        err.response?.data?.message || "Registration failed"
+      );
+
+    }
+
   };
 
 

@@ -1,50 +1,53 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("student");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
 
     e.preventDefault();
 
-    /*
-      Create a basic user profile from the login details.
-      Later, the backend/database will provide these details.
-    */
+    try {
 
-    const existingUser =
-      JSON.parse(localStorage.getItem("user")) || {};
+      const res = await api.post("/auth/login", {
+        email,
+        password
+      });
 
-    const user = {
-      ...existingUser,
-      email: email,
-      role: role
-    };
+      // Save the REAL user + token from the backend
+      login(res.data.user, res.data.token);
 
-    localStorage.setItem(
-      "user",
-      JSON.stringify(user)
-    );
+      const userRole = res.data.user.role;
 
+      // Redirect according to role
 
-    // Redirect according to role
+      if (userRole === "student") {
+        navigate("/student");
+      }
 
-    if (role === "student") {
-      navigate("/student");
-    }
+      if (userRole === "college") {
+        navigate("/college");
+      }
 
-    if (role === "college") {
-      navigate("/college");
-    }
+      if (userRole === "company") {
+        navigate("/company");
+      }
 
-    if (role === "company") {
-      navigate("/company");
+    } catch (err) {
+
+      alert(
+        err.response?.data?.message || "Login failed"
+      );
+
     }
 
   };
