@@ -11,9 +11,10 @@ const generateToken = require("../utils/generateToken");
 const registerUser = async (req, res, next) => {
   try {
     const { name, email, password, role } = req.body;
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
 
     // 1. Basic validation
-    if (!name || !email || !password || !role) {
+    if (!name || !normalizedEmail || !password || !role) {
       return res.status(400).json({ message: "Please provide name, email, password and role" });
     }
 
@@ -22,7 +23,7 @@ const registerUser = async (req, res, next) => {
     }
 
     // 2. Check if a user with this email already exists
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
       return res.status(400).json({ message: "A user with this email already exists" });
     }
@@ -34,7 +35,7 @@ const registerUser = async (req, res, next) => {
     // 4. Create the core User document
     const user = await User.create({
       name,
-      email,
+      email: normalizedEmail,
       password: hashedPassword,
       role,
     });
@@ -73,13 +74,14 @@ const registerUser = async (req, res, next) => {
 const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
 
-    if (!email || !password) {
+    if (!normalizedEmail || !password) {
       return res.status(400).json({ message: "Please provide email and password" });
     }
 
     // .select("+password") because the schema hides password by default
-    const user = await User.findOne({ email: email.toLowerCase() }).select("+password");
+    const user = await User.findOne({ email: normalizedEmail }).select("+password");
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
