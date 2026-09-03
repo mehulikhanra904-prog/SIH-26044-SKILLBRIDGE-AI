@@ -1,7 +1,11 @@
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
+import { useAuth } from "../../context/AuthContext";
 
 function Resume() {
+
+  const { user } = useAuth();
+
   return (
     <div className="dashboard-layout">
 
@@ -14,7 +18,7 @@ function Resume() {
           subtitle="Create and manage your professional resume."
         />
 
-        <div className="card">
+        <div className="card animate-fade-up">
 
           <div className="section-title">
             <h2>Resume Builder</h2>
@@ -25,14 +29,14 @@ function Resume() {
 
             <div className="resume-header">
 
-              <h1>Mehuli Khanra</h1>
+              <h1>{user?.name || "Your Name"}</h1>
 
               <p>
                 Aspiring Full Stack & AI Engineer
               </p>
 
               <div className="resume-contact">
-                <span>📧 student@email.com</span>
+                <span>📧 {user?.email || "your@email.com"}</span>
                 <span>📱 +91 XXXXX XXXXX</span>
                 <span>📍 Kolkata, India</span>
               </div>

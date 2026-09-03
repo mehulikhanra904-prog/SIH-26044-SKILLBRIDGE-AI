@@ -1,3 +1,4 @@
+import { Sparkles } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "../services/api";
@@ -47,15 +48,39 @@ function Register() {
 
     <div className="login-page">
 
-      <div className="login-card">
+      {/* Animated background shapes */}
+      <div className="cyber-grid"></div>
+      <div className="bg-blob blob-1"></div>
+      <div className="bg-blob blob-2"></div>
+      <div className="bg-blob blob-3"></div>
+      <div className="particles">
+        <span className="particle p1"></span>
+        <span className="particle p2"></span>
+        <span className="particle p3"></span>
+        <span className="particle p4"></span>
+        <span className="particle p5"></span>
+        <span className="particle p6"></span>
+        <span className="particle p7"></span>
+        <span className="particle p8"></span>
+      </div>
+
+      <div className="shooting-stars">
+        <span className="star s1"></span>
+        <span className="star s2"></span>
+        <span className="star s3"></span>
+      </div>
+
+      <div className="glow-ring"></div>
+
+      <div className="login-card animate-in">
 
 
         {/* Logo */}
 
         <div className="logo-area">
 
-          <div className="logo-icon">
-            S
+          <div className="logo-icon pulse-icon">
+            <Sparkles size={30} strokeWidth={2.2} />
           </div>
 
           <h1>

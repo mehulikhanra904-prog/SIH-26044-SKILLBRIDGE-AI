@@ -31,7 +31,6 @@ const studentSchema = new mongoose.Schema(
     },
     resumeUrl: {
       type: String,
-      trim: true,
     },
     phone: {
       type: String,

@@ -158,7 +158,7 @@ function Skills() {
 
         {/* Student Information */}
 
-        <div className="card">
+        <div className="card animate-fade-up">
 
           <div className="section-title">
 

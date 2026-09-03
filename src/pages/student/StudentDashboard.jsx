@@ -217,7 +217,7 @@ function StudentDashboard() {
 
         {/* Student Information */}
 
-        <div className="card student-welcome-card">
+        <div className="card student-welcome-card animate-fade-up">
 
           <div className="student-welcome-content">
 
@@ -256,7 +256,7 @@ function StudentDashboard() {
 
         <div className="stats-grid">
 
-          <div className="stat-card">
+          <div className="stat-card animate-stagger" style={{ animationDelay: "0.1s" }}>
             <span className="stat-label">
               Skill Readiness
             </span>
@@ -270,7 +270,7 @@ function StudentDashboard() {
             </p>
           </div>
 
-          <div className="stat-card">
+          <div className="stat-card animate-stagger" style={{ animationDelay: "0.2s" }}>
             <span className="stat-label">
               Skills
             </span>
@@ -284,7 +284,7 @@ function StudentDashboard() {
             </p>
           </div>
 
-          <div className="stat-card">
+          <div className="stat-card animate-stagger" style={{ animationDelay: "0.3s" }}>
             <span className="stat-label">
               Applications
             </span>
@@ -298,7 +298,7 @@ function StudentDashboard() {
             </p>
           </div>
 
-          <div className="stat-card">
+          <div className="stat-card animate-stagger" style={{ animationDelay: "0.4s" }}>
             <span className="stat-label">
               AI Matches
             </span>
@@ -316,7 +316,7 @@ function StudentDashboard() {
 
         {/* Skill Readiness */}
 
-        <div className="card profile-card">
+        <div className="card profile-card animate-fade-up">
 
           <div className="section-title">
 
@@ -363,7 +363,7 @@ function StudentDashboard() {
 
         {/* Skills */}
 
-        <div className="card profile-card">
+        <div className="card profile-card animate-fade-up">
 
           <div className="section-title">
 
@@ -400,7 +400,7 @@ function StudentDashboard() {
 
         {/* Skill Gaps */}
 
-        <div className="card profile-card">
+        <div className="card profile-card animate-fade-up">
 
           <div className="section-title">
 
@@ -490,7 +490,7 @@ function StudentDashboard() {
 
         {/* Recommended Opportunities */}
 
-        <div className="card profile-card">
+        <div className="card profile-card animate-fade-up">
 
           <div className="section-title">
 
@@ -692,7 +692,7 @@ function StudentDashboard() {
           >
 
             <div
-              className="job-modal"
+              className="job-modal animate-modal-in"
               onClick={(e) =>
                 e.stopPropagation()
               }
