@@ -1,5 +1,5 @@
-const User = require("../models/User");
-const Student = require("../models/Student");
+import User from "../models/User.js";
+import Student from "../models/Student.js";
 
 // Builds the public student payload returned to the frontend. Password is never
 // selected from the User model, so it cannot be exposed through this endpoint.
@@ -120,4 +120,4 @@ const updateStudentProfile = async (req, res, next) => {
   }
 };
 
-module.exports = { getStudentProfile, updateStudentProfile };
+export { getStudentProfile, updateStudentProfile };

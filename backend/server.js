@@ -1,43 +1,95 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const connectDB = require("./config/db");
-const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
-const authRoutes = require("./routes/authRoutes");
-const applicationRoutes = require("./routes/applicationRoutes");
-const companyRoutes = require("./routes/companyRoutes");
-const jobRoutes = require("./routes/jobRoutes");
-const studentRoutes = require("./routes/studentRoutes");
-const testRoutes = require("./routes/testRoutes");
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
 
-// Connect to MongoDB Atlas
-connectDB();
+// Routes
+import authRoutes from "./routes/authRoutes.js";
+import studentRoutes from "./routes/studentRoutes.js";
+import companyRoutes from "./routes/companyRoutes.js";
+import jobRoutes from "./routes/jobRoutes.js";
+import applicationRoutes from "./routes/applicationRoutes.js";
+import testRoutes from "./routes/testRoutes.js";
+import intelligenceRoutes from "./routes/intelligenceRoutes.js";
+
+// Middleware
+import {
+  notFound,
+  errorHandler,
+} from "./middleware/errorMiddleware.js";
+
+dotenv.config();
 
 const app = express();
 
-// --- Core middleware ---
-app.use(cors()); // allows the frontend (different origin) to call this API
-app.use(express.json()); // parses incoming JSON request bodies into req.body
+// ===============================
+// MIDDLEWARE
+// ===============================
 
-// --- Health check route ---
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ===============================
+// BASIC ROUTE
+// ===============================
+
 app.get("/", (req, res) => {
-  res.json({ message: "SkillBridge AI backend is running" });
+  res.json({
+    success: true,
+    message: "SkillBridge AI Backend is running 🚀",
+  });
 });
 
-// --- API routes ---
+// ===============================
+// API ROUTES
+// ===============================
+
 app.use("/api/auth", authRoutes);
-app.use("/api/applications", applicationRoutes);
+app.use("/api/students", studentRoutes);
 app.use("/api/companies", companyRoutes);
 app.use("/api/jobs", jobRoutes);
-app.use("/api/students", studentRoutes);
-app.use("/api", testRoutes); // exposes /api/student/ping etc.
+app.use("/api/applications", applicationRoutes);
+app.use("/api/tests", testRoutes);
+app.use("/api/intelligence", intelligenceRoutes);
 
-// --- Error handling (MUST be registered last) ---
+// ===============================
+// 404 + ERROR HANDLING
+// ===============================
+
 app.use(notFound);
 app.use(errorHandler);
 
+// ===============================
+// MONGODB CONNECTION
+// ===============================
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const MONGO_URI = process.env.MONGO_URI;
+
+if (!MONGO_URI) {
+  console.error("❌ MONGO_URI is missing from .env");
+  process.exit(1);
+}
+
+mongoose
+  .connect(MONGO_URI)
+  .then(() => {
+    console.log("✅ MongoDB connected successfully");
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error("❌ MongoDB connection failed:");
+    console.error(error.message);
+    process.exit(1);
+  });
