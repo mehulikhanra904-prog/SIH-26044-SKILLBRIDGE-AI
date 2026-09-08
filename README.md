@@ -1,16 +1,105 @@
-# React + Vite
+# 🚀 SkillBridge AI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### AI-Powered Skill Discovery, Career Guidance & Digital Credential Platform
 
-Currently, two official plugins are available:
+<p align="center">
+  <img src="https://img.shields.io/badge/Smart%20India%20Hackathon-2026-blue?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/AI-Powered-GenAI-purple?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/MERN-Stack-green?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Web3-Stellar-orange?style=for-the-badge" />
+</p>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+<p align="center">
+  <b>Bridge the gap between what you know and what the industry needs.</b>
+</p>
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🌐 Live Demo
 
-## Expanding the ESLint configuration
+### 🚀 Frontend — Vercel
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+👉 **[Open SkillBridge AI](https://sih-26044-skillbridge-ai-gold.vercel.app/)**
+
+### ⚙️ Backend — Render
+
+👉 **[SkillBridge AI Backend](https://sih-26044-skillbridge-ai.onrender.com)**
+
+> 💡 Open the Vercel link to experience the complete SkillBridge AI application.
+
+---
+
+## 🌟 Overview
+
+**SkillBridge AI** is an AI-powered career and skill development platform designed to help students and job seekers discover the right skills, identify their skill gaps, receive personalized learning guidance, and build verifiable digital credentials.
+
+The platform combines:
+
+- 🤖 Generative AI
+- 🧠 Personalized skill-gap analysis
+- 📚 Career & learning recommendations
+- 🎓 Digital credentials
+- 🔐 Secure authentication
+- 🌐 Web3-based credential verification
+- 💼 Industry-oriented career guidance
+
+SkillBridge AI transforms a traditional resume-driven approach into a **skill-driven career ecosystem**.
+
+---
+
+# 🎯 Problem Statement
+
+Students often face several challenges while preparing for employment:
+
+- ❌ Lack of awareness about industry-demanded skills
+- ❌ Difficulty identifying personal skill gaps
+- ❌ Generic learning roadmaps
+- ❌ Lack of personalized career guidance
+- ❌ Difficulty proving the authenticity of certificates
+- ❌ Scattered academic and skill achievements
+- ❌ Limited understanding of which skills are required for a particular career
+
+As a result, students may spend significant time learning skills that do not align with their desired career path.
+
+---
+
+# 💡 Our Solution
+
+**SkillBridge AI** acts as an intelligent bridge between **students, skills, learning resources, and career opportunities**.
+
+The platform analyzes a user's skills, interests, goals, and progress to provide:
+
+> **Personalized Skill Analysis → Skill Gap Detection → Learning Roadmap → AI Guidance → Verifiable Credentials**
+
+---
+
+# ✨ Key Features
+
+## 🤖 AI Career Assistant
+
+An intelligent AI assistant that helps users with:
+
+- Career-related questions
+- Skill recommendations
+- Learning guidance
+- Interview preparation
+- Technology selection
+- Personalized career advice
+
+---
+
+## 🧠 AI Skill Gap Analysis
+
+Users can identify:
+
+```text
+Current Skills
+      ↓
+Target Career
+      ↓
+Required Skills
+      ↓
+Skill Gap Detection
+      ↓
+Personalized Roadmap
+                  

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 // Extra profile fields ONLY for users whose role is "company".
 const companySchema = new mongoose.Schema(
@@ -51,4 +51,4 @@ const companySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Company", companySchema);
+export default mongoose.model("Company", companySchema);

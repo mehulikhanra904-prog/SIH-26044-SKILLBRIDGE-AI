@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const applicationSchema = new mongoose.Schema(
   {
@@ -17,4 +17,4 @@ const applicationSchema = new mongoose.Schema(
 applicationSchema.index({ job: 1, student: 1 }, { unique: true });
 applicationSchema.index({ student: 1, createdAt: -1 });
 
-module.exports = mongoose.model("Application", applicationSchema);
+export default mongoose.model("Application", applicationSchema);

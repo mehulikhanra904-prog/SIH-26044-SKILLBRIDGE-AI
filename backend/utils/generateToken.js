@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 // Creates a signed JWT containing the user's id and role.
 // This token is what the frontend will store and send back on every
@@ -9,4 +9,4 @@ const generateToken = (id, role) => {
   });
 };
 
-module.exports = generateToken;
+export default generateToken;

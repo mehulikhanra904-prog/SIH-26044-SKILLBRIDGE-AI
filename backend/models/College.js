@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 // Extra profile fields ONLY for users whose role is "college".
 const collegeSchema = new mongoose.Schema(
@@ -29,4 +29,4 @@ const collegeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("College", collegeSchema);
+export default mongoose.model("College", collegeSchema);

@@ -14,4 +14,4 @@ router
   .get(verifyToken, studentOnly, getStudentProfile)
   .put(verifyToken, studentOnly, updateStudentProfile);
 
-module.exports = router;
+export default router;

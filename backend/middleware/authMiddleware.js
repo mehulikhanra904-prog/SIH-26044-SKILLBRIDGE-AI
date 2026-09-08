@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
 // verifyToken: checks that a valid JWT was sent, and attaches the
 // logged-in user's info to req.user so later code/middleware can use it.
@@ -50,4 +50,4 @@ const studentOnly = requireRole("student");
 const collegeOnly = requireRole("college");
 const companyOnly = requireRole("company");
 
-module.exports = { verifyToken, studentOnly, collegeOnly, companyOnly };
+export { verifyToken, studentOnly, collegeOnly, companyOnly };

@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const Company = require("../models/Company");
-const Job = require("../models/Job");
-const Student = require("../models/Student");
+import mongoose from "mongoose";
+import Company from "../models/Company.js";
+import Job from "../models/Job.js";
+import Student from "../models/Student.js";
 
 const normalizeSkills = (skills) => {
   const values = Array.isArray(skills) ? skills : String(skills || "").split(",");

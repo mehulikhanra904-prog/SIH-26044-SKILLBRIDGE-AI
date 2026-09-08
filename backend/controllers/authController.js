@@ -1,9 +1,9 @@
-const bcrypt = require("bcryptjs");
-const User = require("../models/User");
-const Student = require("../models/Student");
-const College = require("../models/College");
-const Company = require("../models/Company");
-const generateToken = require("../utils/generateToken");
+import bcrypt from "bcryptjs";
+import User from "../models/User.js";
+import Student from "../models/Student.js";
+import College from "../models/College.js";
+import Company from "../models/Company.js";
+import generateToken from "../utils/generateToken.js";
 
 // @route   POST /api/auth/register
 // @desc    Register a new user (student, college, or company)
@@ -126,4 +126,4 @@ const getMe = async (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getMe };
+export { registerUser, loginUser, getMe };

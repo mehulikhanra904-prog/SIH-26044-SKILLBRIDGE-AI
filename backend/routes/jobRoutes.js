@@ -20,4 +20,4 @@ router.get("/:id", verifyToken, getJobById);
 router.put("/:id", verifyToken, companyOnly, updateJob);
 router.delete("/:id", verifyToken, companyOnly, deleteJob);
 
-module.exports = router;
+export default router;

@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
-const Application = require("../models/Application");
-const Company = require("../models/Company");
-const Job = require("../models/Job");
-const Student = require("../models/Student");
+import mongoose from "mongoose";
+import Application from "../models/Application.js";
+import Company from "../models/Company.js";
+import Job from "../models/Job.js";
+import Student from "../models/Student.js";
 
 const allowedStatuses = ["under_review", "shortlisted", "interview", "selected", "rejected"];
 const isValidId = (id) => mongoose.Types.ObjectId.isValid(id);
@@ -147,4 +147,4 @@ const updateApplicationStatus = async (req, res, next) => {
   }
 };
 
-module.exports = { applyToJob, getStudentApplications, withdrawApplication, getCompanyApplications, updateApplicationStatus };
+export { applyToJob, getStudentApplications, withdrawApplication, getCompanyApplications, updateApplicationStatus };

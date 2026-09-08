@@ -1,5 +1,5 @@
-const User = require("../models/User");
-const Student = require("../models/Student");
+import User from "../models/User.js";
+import Student from "../models/Student.js";
 
 const roleRequirements = {
   "Full Stack Developer": ["React", "Node.js", "REST APIs", "Docker", "Git"],

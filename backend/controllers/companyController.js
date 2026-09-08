@@ -1,4 +1,4 @@
-const Company = require("../models/Company");
+import Company from "../models/Company.js";
 
 // @route   GET /api/company/profile
 // @desc    Get the logged-in company's profile
@@ -50,4 +50,4 @@ const updateCompanyProfile = async (req, res, next) => {
   }
 };
 
-module.exports = { getCompanyProfile, updateCompanyProfile };
+export { getCompanyProfile, updateCompanyProfile };
