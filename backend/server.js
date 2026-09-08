@@ -20,8 +20,13 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => res.json({ success: true, message: "SkillBridge AI Backend is running 🚀" }));
-app.get("/api", (req, res) => res.json({ success: true, message: "SkillBridge AI API is running" }));
+app.get("/", (req, res) =>
+  res.json({ success: true, message: "SkillBridge AI Backend is running 🚀" })
+);
+
+app.get("/api", (req, res) =>
+  res.json({ success: true, message: "SkillBridge AI API is running" })
+);
 
 // API routes must be registered before the catch-all 404 middleware.
 app.use("/api/auth", authRoutes);
@@ -38,15 +43,23 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
+
 if (!MONGO_URI) {
   console.error("❌ MONGO_URI is missing from .env");
   process.exit(1);
 }
 
-mongoose.connect(MONGO_URI).then(() => {
-  console.log("✅ MongoDB connected successfully");
-  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-}).catch((error) => {
-  console.error("❌ MongoDB connection failed:", error.message);
-  process.exit(1);
+// Start HTTP first so localhost:5000 is reachable even while MongoDB is
+// connecting. Database-dependent requests will wait for MongoDB to connect.
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
+
+mongoose
+  .connect(MONGO_URI)
+  .then(() => {
+    console.log("✅ MongoDB connected successfully");
+  })
+  .catch((error) => {
+    console.error("❌ MongoDB connection failed:", error.message);
+  });
