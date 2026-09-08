@@ -2,6 +2,10 @@
 // AI SERVICE - GEMINI
 // =====================================================
 
+// Load .env before reading GEMINI_API_KEY.
+// This is required because ES module imports are evaluated before
+// server.js can call dotenv.config().
+import "dotenv/config";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const API_KEY = process.env.GEMINI_API_KEY;
@@ -24,8 +28,6 @@ export const generateAIResponse = async (prompt) => {
   }
 
   try {
-    // Keep the model configurable so the project can be updated without
-    // changing application code when Google's available model changes.
     const modelName = process.env.GEMINI_MODEL || "gemini-2.5-flash";
     const model = genAI.getGenerativeModel({ model: modelName });
 
