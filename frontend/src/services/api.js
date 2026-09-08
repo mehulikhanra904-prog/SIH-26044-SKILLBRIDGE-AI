@@ -1,10 +1,14 @@
 import axios from "axios";
 
-const api = axios.create({
-  baseURL:
-    import.meta.env.VITE_API_URL ||
-    "http://localhost:5000/api",
+// Keep the API base URL consistent whether VITE_API_URL is configured as
+// http://localhost:5000 or http://localhost:5000/api.
+const configuredBaseUrl = import.meta.env.VITE_API_URL?.trim();
+const baseURL = configuredBaseUrl
+  ? `${configuredBaseUrl.replace(/\/+$/, "")}${configuredBaseUrl.replace(/\/+$/, "").endsWith("/api") ? "" : "/api"}`
+  : "http://localhost:5000/api";
 
+const api = axios.create({
+  baseURL,
   headers: {
     "Content-Type": "application/json",
   },
