@@ -48,6 +48,22 @@ const studentSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    resumeHeadline: {
+      type: String,
+      trim: true,
+    },
+    resumeSummary: {
+      type: String,
+      trim: true,
+      maxlength: 3000,
+    },
+    projects: {
+      type: [{
+        name: { type: String, trim: true },
+        description: { type: String, trim: true },
+      }],
+      default: [],
+    },
   },
   { timestamps: true }
 );

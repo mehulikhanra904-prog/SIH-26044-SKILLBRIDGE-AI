@@ -25,11 +25,15 @@ const getCompanyProfile = async (req, res, next) => {
 // @access  Private (company only)
 const updateCompanyProfile = async (req, res, next) => {
   try {
-    const { companyName, industry, website, contactNumber } = req.body;
+    const fields = ["companyName", "industry", "website", "location", "companySize", "hiringEmail", "contactNumber", "about", "hiringDomains"];
+    const updates = {};
+    fields.forEach((field) => {
+      if (req.body[field] !== undefined) updates[field] = req.body[field];
+    });
 
     const company = await Company.findOneAndUpdate(
       { user: req.user.id },
-      { companyName, industry, website, contactNumber },
+      updates,
       { new: true, runValidators: true }
     );
 
