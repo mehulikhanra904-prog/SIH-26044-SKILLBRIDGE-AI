@@ -28,7 +28,7 @@ export const generateAIResponse = async (prompt) => {
   }
 
   try {
-    const modelName = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+    const modelName = process.env.GEMINI_MODEL || "gemini-3.6-flash";
     const model = genAI.getGenerativeModel({ model: modelName });
 
     console.log(`🤖 Sending request to Gemini (${modelName})...`);
