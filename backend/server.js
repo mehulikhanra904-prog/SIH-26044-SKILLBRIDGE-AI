@@ -1,3 +1,6 @@
+import dns from "dns";
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
+
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -11,24 +14,34 @@ import jobRoutes from "./routes/jobRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import testRoutes from "./routes/testRoutes.js";
 import intelligenceRoutes from "./Routes/intelligenceRoutes.js";
+
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
 dotenv.config();
+
 const app = express();
 
+// Middleware
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) =>
-  res.json({ success: true, message: "SkillBridge AI Backend is running 🚀" })
-);
+// Health check
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "SkillBridge AI Backend is running 🚀",
+  });
+});
 
-app.get("/api", (req, res) =>
-  res.json({ success: true, message: "SkillBridge AI API is running" })
-);
+app.get("/api", (req, res) => {
+  res.json({
+    success: true,
+    message: "SkillBridge AI API is running",
+  });
+});
 
-// API routes must be registered before the catch-all 404 middleware.
+// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/companies", companyRoutes);
@@ -38,6 +51,7 @@ app.use("/api/applications", applicationRoutes);
 app.use("/api/tests", testRoutes);
 app.use("/api/intelligence", intelligenceRoutes);
 
+// Error handling
 app.use(notFound);
 app.use(errorHandler);
 
@@ -49,12 +63,12 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
-// Start HTTP first so localhost:5000 is reachable even while MongoDB is
-// connecting. Database-dependent requests will wait for MongoDB to connect.
+// Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
 
+// MongoDB connection
 mongoose
   .connect(MONGO_URI)
   .then(() => {
