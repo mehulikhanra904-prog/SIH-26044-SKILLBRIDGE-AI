@@ -87,20 +87,32 @@ const getRecommendedJobs = async (req, res, next) => {
     if (!student) return res.status(404).json({ message: "Student profile not found" });
 
     const query = { status: "published", deadline: { $gte: new Date() } };
-    if (req.query.type) query.type = req.query.type;
+    if (req.query.type) query.type = new RegExp(`^${escapeRegExp(req.query.type)}$`, "i");
     if (req.query.location) query.location = new RegExp(`^${escapeRegExp(req.query.location)}$`, "i");
-    if (req.query.search) {
-      const search = new RegExp(escapeRegExp(req.query.search), "i");
-      query.$or = [{ title: search }, { location: search }, { skills: search }];
-    }
-
     const jobs = await Job.find(query)
       .populate({ path: "company", populate: { path: "user", select: "name" } });
+    const search = String(req.query.search || "").trim().toLowerCase();
+    const matchingJobs = search
+      ? jobs.filter((job) => {
+        const companyName = job.company?.companyName || job.company?.user?.name || "";
+        const searchableText = [
+          job.title,
+          job.type,
+          job.location,
+          job.salary,
+          job.experience,
+          job.description,
+          companyName,
+          ...(job.skills || []),
+        ].join(" ").toLowerCase();
+        return searchableText.includes(search);
+      })
+      : jobs;
     const studentSkills = new Set(normalizeSkills(student.skills).map((skill) => skill.toLowerCase()));
     const preferredRole = (student.preferredRole || "").toLowerCase();
     const preferredDomain = (student.preferredDomain || "").toLowerCase();
 
-    const recommendations = jobs.map((job) => {
+    const recommendations = matchingJobs.map((job) => {
       const matchedSkills = job.skills.filter((skill) => studentSkills.has(skill.toLowerCase()));
       const missingSkills = job.skills.filter((skill) => !studentSkills.has(skill.toLowerCase()));
       const skillScore = job.skills.length ? (matchedSkills.length / job.skills.length) * 85 : 0;
@@ -113,6 +125,17 @@ const getRecommendedJobs = async (req, res, next) => {
     }).sort((first, second) => second.matchScore - first.matchScore || new Date(second.createdAt) - new Date(first.createdAt));
 
     return res.json({ recommendations });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const getPublishedJobs = async (req, res, next) => {
+  try {
+    const jobs = await Job.find({ status: "published", deadline: { $gte: new Date() } })
+      .populate({ path: "company", populate: { path: "user", select: "name" } })
+      .sort({ createdAt: -1 });
+    return res.json({ jobs: jobs.map((job) => toJobResponse(job)) });
   } catch (error) {
     return next(error);
   }
@@ -174,4 +197,4 @@ function escapeRegExp(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-module.exports = { createJob, getCompanyJobs, getJobById, updateJob, deleteJob, getRecommendedJobs };
+module.exports = { createJob, getCompanyJobs, getJobById, updateJob, deleteJob, getRecommendedJobs, getPublishedJobs };

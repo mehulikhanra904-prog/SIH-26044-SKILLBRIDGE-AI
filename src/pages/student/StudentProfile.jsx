@@ -12,6 +12,7 @@ function StudentProfile() {
   const [profile, setProfile] = useState(emptyProfile);
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -19,7 +20,7 @@ function StudentProfile() {
       try {
         const { data } = await api.get("/students/profile");
         const { profile: studentProfile, ...user } = data.student;
-        setProfile({ ...emptyProfile, ...user, ...studentProfile });
+        setProfile({ ...emptyProfile, ...user, ...(studentProfile || {}), skills: studentProfile?.skills || [] });
       } catch (requestError) {
         setError(requestError.response?.data?.message || "Unable to load your profile.");
       } finally {
@@ -36,13 +37,16 @@ function StudentProfile() {
   const handleSave = async () => {
     try {
       setError("");
+      setSaving(true);
       const { data } = await api.put("/students/profile", profile);
       const { profile: studentProfile, ...user } = data.student;
-      setProfile({ ...emptyProfile, ...user, ...studentProfile });
+      setProfile({ ...emptyProfile, ...user, ...(studentProfile || {}), skills: studentProfile?.skills || [] });
       localStorage.setItem("user", JSON.stringify({ id: user.id, name: user.name, email: user.email, role: user.role }));
       setEditing(false);
     } catch (requestError) {
       setError(requestError.response?.data?.message || "Unable to save your profile.");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -65,8 +69,8 @@ function StudentProfile() {
             <p>{[profile.course, profile.department].filter(Boolean).join(" · ") || "Academic details not added"}</p>
             <span>{profile.collegeName || "College not added"}</span>
           </div>
-          <button className="primary-button" onClick={() => (editing ? handleSave() : setEditing(true))}>
-            {editing ? "Save Profile" : "Edit Profile"}
+          <button type="button" className="primary-button" disabled={saving} onClick={() => (editing ? handleSave() : setEditing(true))}>
+            {saving ? "Saving..." : editing ? "Save Profile" : "Edit Profile"}
           </button>
         </div>
 
@@ -105,7 +109,7 @@ function ProfileSection({ title, subtitle, children }) {
 }
 
 function ProfileInput({ label, name, type = "text", value, onChange, editing }) {
-  return <div className="form-group"><label>{label}</label><input type={type} name={name} value={value ?? ""} onChange={onChange} disabled={!editing} /></div>;
+  return <div className="form-group"><label htmlFor={`profile-${name}`}>{label}</label><input id={`profile-${name}`} type={type} name={name} value={value ?? ""} onChange={onChange} readOnly={!editing} /></div>;
 }
 
 export default StudentProfile;

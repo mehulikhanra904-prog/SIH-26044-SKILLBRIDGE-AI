@@ -3,10 +3,10 @@ import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 import api from "../../services/api";
 
-function Jobs() {
+function Jobs({ internshipOnly = false }) {
   const [search, setSearch] = useState("");
   const [location, setLocation] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState(internshipOnly ? "Internship" : "");
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -18,7 +18,7 @@ function Jobs() {
     setError("");
     try {
       const { data } = await api.get("/jobs/recommendations", { params: { search, location, type } });
-      setJobs(data.recommendations);
+      setJobs(data.recommendations || []);
     } catch (requestError) {
       setError(requestError.response?.data?.message || "Unable to load job recommendations.");
     } finally {
@@ -50,12 +50,12 @@ function Jobs() {
     <div className="dashboard-layout">
       <Sidebar type="student" />
       <main className="main-content">
-        <Navbar title="Recommended Jobs" subtitle="Jobs ranked dynamically from your saved skills and career preferences." />
+        <Navbar title={internshipOnly ? "Recommended Internships" : "Recommended Jobs"} subtitle={internshipOnly ? "Search live internships using your skills and career preferences." : "Search live jobs using your skills and career preferences."} />
         <div className="card"><div className="search-row">
-          <input className="search-input" value={search} onChange={(event) => setSearch(event.target.value)} onKeyDown={(event) => event.key === "Enter" && loadJobs()} placeholder="Search jobs, skills or locations..." />
+          <input className="search-input" value={search} onChange={(event) => setSearch(event.target.value)} onKeyDown={(event) => event.key === "Enter" && loadJobs()} placeholder="Search role, company, skills or location..." />
           <select className="filter-select" value={location} onChange={(event) => setLocation(event.target.value)}><option value="">All Locations</option>{locations.map((item) => <option key={item}>{item}</option>)}</select>
           <select className="filter-select" value={type} onChange={(event) => setType(event.target.value)}><option value="">All Types</option>{types.map((item) => <option key={item}>{item}</option>)}</select>
-          <button className="primary-button" onClick={loadJobs}>Search</button>
+          <button className="primary-button" onClick={loadJobs} disabled={loading}>{loading ? "Searching..." : "Search"}</button>
         </div></div>
         {error && <p className="error-message">{error}</p>}
         <div className="ai-info"><div className="ai-info-icon">✦</div><div><strong>AI-Powered Job Matching</strong><p>Each match score is calculated from your profile skills and career preferences.</p></div></div>

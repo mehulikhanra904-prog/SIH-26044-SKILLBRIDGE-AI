@@ -6,12 +6,14 @@ const {
   updateJob,
   deleteJob,
   getRecommendedJobs,
+  getPublishedJobs,
 } = require("../controllers/jobController");
-const { verifyToken, companyOnly, studentOnly } = require("../middleware/authMiddleware");
+const { verifyToken, companyOnly, studentOnly, collegeOnly } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
 router.get("/recommendations", verifyToken, studentOnly, getRecommendedJobs);
+router.get("/published", verifyToken, collegeOnly, getPublishedJobs);
 router.get("/mine", verifyToken, companyOnly, getCompanyJobs);
 router.post("/", verifyToken, companyOnly, createJob);
 router.get("/:id", verifyToken, getJobById);
