@@ -10,10 +10,16 @@ const roleRequirements = {
 
 const normalize = (value) => String(value || "").trim().toLowerCase();
 
+const getOrCreateStudentProfile = (userId) =>
+  Student.findOneAndUpdate(
+    { user: userId },
+    { $setOnInsert: { user: userId } },
+    { new: true, upsert: true, setDefaultsOnInsert: true }
+  );
+
 const analyzeSkills = async (req, res, next) => {
   try {
-    const student = await Student.findOne({ user: req.user.id });
-    if (!student) return res.status(404).json({ message: "Student profile not found" });
+    const student = await getOrCreateStudentProfile(req.user.id);
     const role = roleRequirements[req.query.role] ? req.query.role : "Full Stack Developer";
     const currentSkills = new Set((student.skills || []).map(normalize));
     const skills = roleRequirements[role].map((name) => {
@@ -28,8 +34,7 @@ const analyzeSkills = async (req, res, next) => {
 
 const getCareerRoadmap = async (req, res, next) => {
   try {
-    const student = await Student.findOne({ user: req.user.id });
-    if (!student) return res.status(404).json({ message: "Student profile not found" });
+    const student = await getOrCreateStudentProfile(req.user.id);
     const role = roleRequirements[req.query.role] ? req.query.role : (roleRequirements[student.preferredRole] ? student.preferredRole : "Full Stack Developer");
     const currentSkills = new Set((student.skills || []).map(normalize));
     const stages = [
@@ -72,8 +77,9 @@ const formatStudent = (user, student) => ({
 
 const getStudentProfile = async (req, res, next) => {
   try {
-    const [user, student] = await Promise.all([User.findById(req.user.id), Student.findOne({ user: req.user.id })]);
-    if (!user || !student) return res.status(404).json({ message: "Student profile not found" });
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: "Student user not found" });
+    const student = await getOrCreateStudentProfile(req.user.id);
     return res.status(200).json({ student: formatStudent(user, student) });
   } catch (error) { return next(error); }
 };
@@ -82,8 +88,8 @@ const updateStudentProfile = async (req, res, next) => {
   try {
     const { name, email, collegeName, department, course, graduationYear, skills, resumeUrl, phone, location, preferredRole, preferredDomain, resumeHeadline, resumeSummary, projects } = req.body;
     const user = await User.findById(req.user.id);
-    const student = await Student.findOne({ user: req.user.id });
-    if (!user || !student) return res.status(404).json({ message: "Student profile not found" });
+    if (!user) return res.status(404).json({ message: "Student user not found" });
+    const student = await getOrCreateStudentProfile(req.user.id);
     if (name !== undefined) user.name = name;
     if (email !== undefined) {
       const normalizedEmail = String(email).trim().toLowerCase();
