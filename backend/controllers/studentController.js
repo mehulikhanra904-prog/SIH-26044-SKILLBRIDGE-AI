@@ -14,46 +14,23 @@ const analyzeSkills = async (req, res, next) => {
   try {
     const student = await Student.findOne({ user: req.user.id });
     if (!student) return res.status(404).json({ message: "Student profile not found" });
-
     const role = roleRequirements[req.query.role] ? req.query.role : "Full Stack Developer";
     const currentSkills = new Set((student.skills || []).map(normalize));
     const skills = roleRequirements[role].map((name) => {
       const present = currentSkills.has(normalize(name));
-      return {
-        name,
-        required: "Industry relevant",
-        progress: present ? 100 : 0,
-        status: present ? "Strong" : "Skill Gap",
-        className: present ? "strong" : "missing",
-      };
+      return { name, required: "Industry relevant", progress: present ? 100 : 0, status: present ? "Strong" : "Skill Gap", className: present ? "strong" : "missing" };
     });
     const score = Math.round((skills.filter((skill) => skill.progress > 0).length / skills.length) * 100);
     const missing = skills.filter((skill) => !currentSkills.has(normalize(skill.name)));
-    return res.json({
-      role,
-      score,
-      message: score >= 80 ? "Strong Progress" : score >= 50 ? "Good Progress" : "Needs Improvement",
-      description: missing.length
-        ? `Add or strengthen ${missing.map((skill) => skill.name).join(", ")} to improve your readiness for this role.`
-        : "Your saved profile skills cover the current requirements for this role.",
-      skills,
-      recommendations: missing.map((skill) => ({
-        title: `Learn ${skill.name}`,
-        description: `Add practical ${skill.name} experience through a project, course, or application.`,
-      })),
-    });
-  } catch (error) {
-    return next(error);
-  }
+    return res.json({ role, score, message: score >= 80 ? "Strong Progress" : score >= 50 ? "Good Progress" : "Needs Improvement", description: missing.length ? `Add or strengthen ${missing.map((skill) => skill.name).join(", ")} to improve your readiness for this role.` : "Your saved profile skills cover the current requirements for this role.", skills, recommendations: missing.map((skill) => ({ title: `Learn ${skill.name}`, description: `Add practical ${skill.name} experience through a project, course, or application.` })) });
+  } catch (error) { return next(error); }
 };
 
 const getCareerRoadmap = async (req, res, next) => {
   try {
     const student = await Student.findOne({ user: req.user.id });
     if (!student) return res.status(404).json({ message: "Student profile not found" });
-
-    const role = roleRequirements[req.query.role] ? req.query.role
-      : (roleRequirements[student.preferredRole] ? student.preferredRole : "Full Stack Developer");
+    const role = roleRequirements[req.query.role] ? req.query.role : (roleRequirements[student.preferredRole] ? student.preferredRole : "Full Stack Developer");
     const currentSkills = new Set((student.skills || []).map(normalize));
     const stages = [
       { title: "Core Foundations", skills: role === "Frontend Developer" ? ["HTML", "CSS", "JavaScript"] : ["JavaScript", "Git"] },
@@ -63,29 +40,13 @@ const getCareerRoadmap = async (req, res, next) => {
     ].map((stage) => {
       const matched = stage.skills.filter((skill) => currentSkills.has(normalize(skill))).length;
       const progress = Math.round((matched / stage.skills.length) * 100);
-      return {
-        ...stage,
-        progress,
-        status: progress === 100 ? "Completed" : progress > 0 ? "In Progress" : "Upcoming",
-        description: progress === 100
-          ? "Your saved profile shows these skills are covered."
-          : `Build practical experience with ${stage.skills.join(", ")}.`,
-      };
+      return { ...stage, progress, status: progress === 100 ? "Completed" : progress > 0 ? "In Progress" : "Upcoming", description: progress === 100 ? "Your saved profile shows these skills are covered." : `Build practical experience with ${stage.skills.join(", ")}.` };
     });
     const nextStage = stages.find((stage) => stage.progress < 100) || stages[stages.length - 1];
-    return res.json({
-      role,
-      readiness: Math.round(stages.reduce((total, stage) => total + stage.progress, 0) / stages.length),
-      stages,
-      nextStep: nextStage,
-    });
-  } catch (error) {
-    return next(error);
-  }
+    return res.json({ role, readiness: Math.round(stages.reduce((total, stage) => total + stage.progress, 0) / stages.length), stages, nextStep: nextStage });
+  } catch (error) { return next(error); }
 };
 
-// Builds the public student payload returned to the frontend. Password is never
-// selected from the User model, so it cannot be exposed through this endpoint.
 const formatStudent = (user, student) => ({
   id: user._id,
   name: user.name,
@@ -109,71 +70,27 @@ const formatStudent = (user, student) => ({
   },
 });
 
-// @route   GET /api/students/profile
-// @desc    Get the profile belonging to the authenticated student
-// @access  Private / Student
 const getStudentProfile = async (req, res, next) => {
   try {
-    const [user, student] = await Promise.all([
-      User.findById(req.user.id),
-      Student.findOne({ user: req.user.id }),
-    ]);
-
-    if (!user || !student) {
-      return res.status(404).json({ message: "Student profile not found" });
-    }
-
+    const [user, student] = await Promise.all([User.findById(req.user.id), Student.findOne({ user: req.user.id })]);
+    if (!user || !student) return res.status(404).json({ message: "Student profile not found" });
     return res.status(200).json({ student: formatStudent(user, student) });
-  } catch (error) {
-    return next(error);
-  }
+  } catch (error) { return next(error); }
 };
 
-// @route   PUT /api/students/profile
-// @desc    Update the profile belonging to the authenticated student
-// @access  Private / Student
 const updateStudentProfile = async (req, res, next) => {
   try {
-    const {
-      name,
-      email,
-      collegeName,
-      department,
-      course,
-      graduationYear,
-      skills,
-      resumeUrl,
-      phone,
-      location,
-      preferredRole,
-      preferredDomain,
-      resumeHeadline,
-      resumeSummary,
-      projects,
-    } = req.body;
+    const { name, email, collegeName, department, course, graduationYear, skills, resumeUrl, phone, location, preferredRole, preferredDomain, resumeHeadline, resumeSummary, projects } = req.body;
     const user = await User.findById(req.user.id);
     const student = await Student.findOne({ user: req.user.id });
-
-    if (!user || !student) {
-      return res.status(404).json({ message: "Student profile not found" });
-    }
-
+    if (!user || !student) return res.status(404).json({ message: "Student profile not found" });
     if (name !== undefined) user.name = name;
-
     if (email !== undefined) {
       const normalizedEmail = String(email).trim().toLowerCase();
-      const existingUser = await User.findOne({
-        email: normalizedEmail,
-        _id: { $ne: user._id },
-      });
-
-      if (existingUser) {
-        return res.status(400).json({ message: "A user with this email already exists" });
-      }
-
+      const existingUser = await User.findOne({ email: normalizedEmail, _id: { $ne: user._id } });
+      if (existingUser) return res.status(400).json({ message: "A user with this email already exists" });
       user.email = normalizedEmail;
     }
-
     if (collegeName !== undefined) student.collegeName = collegeName;
     if (department !== undefined) student.department = department;
     if (course !== undefined) student.course = course;
@@ -185,39 +102,21 @@ const updateStudentProfile = async (req, res, next) => {
     if (resumeHeadline !== undefined) student.resumeHeadline = resumeHeadline;
     if (resumeSummary !== undefined) student.resumeSummary = resumeSummary;
     if (projects !== undefined) {
-      if (!Array.isArray(projects) || !projects.every((project) => project && typeof project.name === "string" && typeof project.description === "string")) {
-        return res.status(400).json({ message: "Projects must be an array with name and description" });
-      }
-      student.projects = projects.map((project) => ({
-        name: project.name.trim(),
-        description: project.description.trim(),
-      })).filter((project) => project.name || project.description);
+      if (!Array.isArray(projects) || !projects.every((project) => project && typeof project.name === "string" && typeof project.description === "string")) return res.status(400).json({ message: "Projects must be an array with name and description" });
+      student.projects = projects.map((project) => ({ name: project.name.trim(), description: project.description.trim() })).filter((project) => project.name || project.description);
     }
-
     if (graduationYear !== undefined) {
       const year = Number(graduationYear);
-      if (!Number.isInteger(year)) {
-        return res.status(400).json({ message: "Graduation year must be a whole number" });
-      }
+      if (!Number.isInteger(year)) return res.status(400).json({ message: "Graduation year must be a whole number" });
       student.graduationYear = year;
     }
-
     if (skills !== undefined) {
-      if (!Array.isArray(skills) || !skills.every((skill) => typeof skill === "string")) {
-        return res.status(400).json({ message: "Skills must be an array of strings" });
-      }
+      if (!Array.isArray(skills) || !skills.every((skill) => typeof skill === "string")) return res.status(400).json({ message: "Skills must be an array of strings" });
       student.skills = skills.map((skill) => skill.trim()).filter(Boolean);
     }
-
     await Promise.all([user.save(), student.save()]);
-
-    return res.status(200).json({
-      message: "Student profile updated successfully",
-      student: formatStudent(user, student),
-    });
-  } catch (error) {
-    return next(error);
-  }
+    return res.status(200).json({ message: "Student profile updated successfully", student: formatStudent(user, student) });
+  } catch (error) { return next(error); }
 };
 
-module.exports = { getStudentProfile, updateStudentProfile, analyzeSkills, getCareerRoadmap };
+export { getStudentProfile, updateStudentProfile, analyzeSkills, getCareerRoadmap };
