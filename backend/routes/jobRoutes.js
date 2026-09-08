@@ -1,5 +1,5 @@
-const express = require("express");
-const {
+import express from "express";
+import {
   createJob,
   getCompanyJobs,
   getJobById,
@@ -7,8 +7,8 @@ const {
   deleteJob,
   getRecommendedJobs,
   getPublishedJobs,
-} = require("../controllers/jobController");
-const { verifyToken, companyOnly, studentOnly, collegeOnly } = require("../middleware/authMiddleware");
+} from "../controllers/jobController.js";
+import { verifyToken, companyOnly, studentOnly, collegeOnly } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
