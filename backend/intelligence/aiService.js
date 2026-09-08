@@ -2,11 +2,11 @@
 // AI SERVICE - GEMINI
 // =====================================================
 
-// Load .env before reading GEMINI_API_KEY.
-// This is required because ES module imports are evaluated before
-// server.js can call dotenv.config().
-import "dotenv/config";
+import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+
+// Explicitly load the backend .env before reading the API key.
+dotenv.config();
 
 const API_KEY = process.env.GEMINI_API_KEY;
 
