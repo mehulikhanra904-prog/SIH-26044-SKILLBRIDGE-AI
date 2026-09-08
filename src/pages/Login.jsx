@@ -13,24 +13,38 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const res = await api.post("/auth/login", { email, password });
-      const userRole = res.data.user.role;
 
-      // The selected role must match the role stored for this account.
-      if (userRole !== role) {
-        alert(`This account is registered as ${userRole}. Please select ${userRole} in "Login As".`);
-        return;
+    try {
+      const res = await api.post("/auth/login", {
+        email: email.trim(),
+        password,
+        role,
+      });
+
+      const loggedInUser = res.data?.user;
+      const userRole = loggedInUser?.role;
+
+      if (!loggedInUser || !userRole) {
+        throw new Error("Login response did not contain a user role.");
       }
 
-      login(res.data.user, res.data.token);
+      login(loggedInUser, res.data.token);
 
-      if (userRole === "student") navigate("/student", { replace: true });
-      else if (userRole === "college") navigate("/college", { replace: true });
-      else if (userRole === "company") navigate("/company", { replace: true });
-      else alert("Unknown account role. Please contact the administrator.");
+      if (userRole === "student") {
+        navigate("/student", { replace: true });
+      } else if (userRole === "college") {
+        navigate("/college", { replace: true });
+      } else if (userRole === "company") {
+        navigate("/company", { replace: true });
+      } else {
+        alert("Unknown account role. Please contact the administrator.");
+      }
     } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
+      alert(
+        err.response?.data?.message ||
+        err.message ||
+        "Login failed"
+      );
     }
   };
 
