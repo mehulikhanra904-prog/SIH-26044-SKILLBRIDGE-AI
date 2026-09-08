@@ -4,10 +4,6 @@
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// =====================================================
-// CHECK API KEY
-// =====================================================
-
 const API_KEY = process.env.GEMINI_API_KEY;
 
 if (!API_KEY) {
@@ -16,47 +12,48 @@ if (!API_KEY) {
   console.log("✅ Gemini API key loaded");
 }
 
-// =====================================================
-// INITIALIZE GEMINI
-// =====================================================
-
-const genAI = new GoogleGenerativeAI(API_KEY);
-
-// =====================================================
-// GENERATE AI RESPONSE
-// =====================================================
+const genAI = API_KEY ? new GoogleGenerativeAI(API_KEY) : null;
 
 export const generateAIResponse = async (prompt) => {
+  if (!API_KEY || !genAI) {
+    throw new Error("GEMINI_API_KEY is missing");
+  }
+
+  if (!prompt || typeof prompt !== "string" || !prompt.trim()) {
+    throw new Error("Prompt is required");
+  }
+
   try {
-    if (!API_KEY) {
-      throw new Error("GEMINI_API_KEY is missing");
-    }
+    // Keep the model configurable so the project can be updated without
+    // changing application code when Google's available model changes.
+    const modelName = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+    const model = genAI.getGenerativeModel({ model: modelName });
 
-    if (!prompt || typeof prompt !== "string") {
-      throw new Error("Prompt is required");
-    }
+    console.log(`🤖 Sending request to Gemini (${modelName})...`);
 
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash"
-    });
-
-    console.log("🤖 Sending request to Gemini...");
-
-    const result = await model.generateContent(prompt);
-
-    const text = result.response.text();
+    const result = await model.generateContent(prompt.trim());
+    const text = result?.response?.text?.()?.trim();
 
     if (!text) {
       throw new Error("Gemini returned an empty response");
     }
 
     console.log("✅ Gemini response generated successfully");
-
     return text;
-
   } catch (error) {
-    console.error("❌ Gemini AI Error:", error.message);
+    console.error("❌ Gemini AI Error:", error?.message || error);
 
-    throw new Error("Failed to generate AI response");
+    const status = error?.status || error?.response?.status;
+    if (status === 401 || status === 403) {
+      throw new Error("Gemini API key is invalid or not authorized");
+    }
+    if (status === 404) {
+      throw new Error("Gemini model is unavailable. Set GEMINI_MODEL in .env to an available model");
+    }
+    if (status === 429) {
+      throw new Error("Gemini API rate limit exceeded. Please try again later");
+    }
+
+    throw new Error(error?.message || "Failed to generate AI response");
   }
 };
