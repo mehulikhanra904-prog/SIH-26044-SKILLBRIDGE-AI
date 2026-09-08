@@ -23,6 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => res.json({ success: true, message: "SkillBridge AI Backend is running 🚀" }));
 app.get("/api", (req, res) => res.json({ success: true, message: "SkillBridge AI API is running" }));
 
+// API routes must be registered before the catch-all 404 middleware.
 app.use("/api/auth", authRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/companies", companyRoutes);
