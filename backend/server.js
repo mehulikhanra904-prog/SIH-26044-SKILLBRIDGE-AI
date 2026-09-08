@@ -10,7 +10,7 @@ import collegeRoutes from "./routes/collegeRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import testRoutes from "./routes/testRoutes.js";
-import intelligenceRoutes from "./routes/intelligenceRoutes.js";
+import intelligenceRoutes from "./Routes/intelligenceRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
 dotenv.config();
