@@ -1,3 +1,4 @@
+import { Sparkles } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -59,7 +60,7 @@ function Sidebar({ type = "student" }) {
       <div className="sidebar-logo">
 
         <div className="sidebar-logo-icon">
-          S
+          <Sparkles size={20} strokeWidth={2.2} />
         </div>
 
         <div>
@@ -121,7 +122,7 @@ function Sidebar({ type = "student" }) {
             {user?.name ? user.name.charAt(0).toUpperCase() : "?"}
           </div>
 
-          <div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
 
             <strong>
               {user?.name || "Guest"}
