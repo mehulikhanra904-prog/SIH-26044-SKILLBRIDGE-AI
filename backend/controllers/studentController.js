@@ -220,4 +220,4 @@ const updateStudentProfile = async (req, res, next) => {
   }
 };
 
-module.exports = { getStudentProfile, updateStudentProfile, analyzeSkills, getCareerRoadmap };
+export { getStudentProfile, updateStudentProfile, analyzeSkills, getCareerRoadmap };

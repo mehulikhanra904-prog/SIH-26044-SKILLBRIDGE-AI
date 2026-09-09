@@ -197,4 +197,4 @@ function escapeRegExp(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-module.exports = { createJob, getCompanyJobs, getJobById, updateJob, deleteJob, getRecommendedJobs, getPublishedJobs };
+export { createJob, getCompanyJobs, getJobById, updateJob, deleteJob, getRecommendedJobs, getPublishedJobs };

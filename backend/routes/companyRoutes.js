@@ -1,9 +1,12 @@
 import express from "express";
+import { getCompanyProfile, updateCompanyProfile } from "../controllers/companyController.js";
+import { verifyToken, companyOnly } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.status(501).json({ message: "Company routes are not implemented yet" });
-});
+router
+  .route("/profile")
+  .get(verifyToken, companyOnly, getCompanyProfile)
+  .put(verifyToken, companyOnly, updateCompanyProfile);
 
 export default router;

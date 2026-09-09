@@ -1,6 +1,11 @@
-const express = require("express");
-const { getStudentProfile, updateStudentProfile, analyzeSkills, getCareerRoadmap } = require("../controllers/studentController");
-const { verifyToken, studentOnly } = require("../middleware/authMiddleware");
+import express from "express";
+import {
+  getStudentProfile,
+  updateStudentProfile,
+  analyzeSkills,
+  getCareerRoadmap,
+} from "../controllers/studentController.js";
+import { verifyToken, studentOnly } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 

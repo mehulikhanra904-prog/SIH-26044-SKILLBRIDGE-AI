@@ -100,7 +100,7 @@ function CollegeDashboard() {
             </div>
 
             <div className="stat-value">
-              82%
+              84%
             </div>
 
             <p className="stat-description">

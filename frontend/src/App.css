@@ -298,7 +298,27 @@ textarea {
 
   display: flex;
 
-  background: var(--background);
+  background:
+    radial-gradient(circle at 90% 0%, rgba(124, 108, 242, 0.1), transparent 32%),
+    var(--background);
+}
+
+.dashboard-layout:has(.student-sidebar) {
+  background:
+    radial-gradient(circle at 92% 4%, rgba(79, 124, 255, 0.16), transparent 34%),
+    #f2f7ff;
+}
+
+.dashboard-layout:has(.college-sidebar) {
+  background:
+    radial-gradient(circle at 92% 4%, rgba(34, 160, 107, 0.14), transparent 34%),
+    #f2fbf7;
+}
+
+.dashboard-layout:has(.company-sidebar) {
+  background:
+    radial-gradient(circle at 92% 4%, rgba(233, 162, 39, 0.16), transparent 34%),
+    #fffaf0;
 }
 
 

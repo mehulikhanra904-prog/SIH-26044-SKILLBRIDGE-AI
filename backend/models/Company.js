@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// Extra profile fields ONLY for users whose role is "company".
 const companySchema = new mongoose.Schema(
   {
     user: {
@@ -9,44 +8,15 @@ const companySchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    companyName: {
-      type: String,
-      trim: true,
-    },
-    industry: {
-      type: String,
-      trim: true,
-    },
-    website: {
-      type: String,
-      trim: true,
-    },
-    location: {
-      type: String,
-      trim: true,
-    },
-    companySize: {
-      type: String,
-      trim: true,
-    },
-    hiringEmail: {
-      type: String,
-      trim: true,
-      lowercase: true,
-    },
-    contactNumber: {
-      type: String,
-      trim: true,
-    },
-    about: {
-      type: String,
-      trim: true,
-      maxlength: 3000,
-    },
-    hiringDomains: {
-      type: [String],
-      default: [],
-    },
+    companyName: { type: String, trim: true, default: "" },
+    industry: { type: String, trim: true, default: "" },
+    website: { type: String, trim: true, default: "" },
+    location: { type: String, trim: true, default: "" },
+    companySize: { type: String, trim: true, default: "" },
+    hiringEmail: { type: String, trim: true, default: "" },
+    contactNumber: { type: String, trim: true, default: "" },
+    about: { type: String, trim: true, default: "" },
+    hiringDomains: { type: [String], default: [] },
   },
   { timestamps: true }
 );
