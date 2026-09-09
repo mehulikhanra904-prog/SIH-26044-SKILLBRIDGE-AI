@@ -53,7 +53,7 @@ function Sidebar({ type = "student" }) {
   }
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${type}-sidebar`}>
 
       {/* Logo */}
 

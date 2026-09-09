@@ -6,11 +6,7 @@ import {
   getCompanyApplications,
   updateApplicationStatus,
 } from "../controllers/applicationController.js";
-import {
-  verifyToken,
-  studentOnly,
-  companyOnly,
-} from "../middleware/authMiddleware.js";
+import { verifyToken, studentOnly, companyOnly } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 

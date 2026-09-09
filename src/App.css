@@ -4284,6 +4284,17 @@ body,
   color: #e2e8f0 !important;
   transition: all 0.2s ease;
 }
+.auth-form select option {
+  background: #1a0b2e;
+  color: #e2e8f0;
+  padding: 10px;
+}
+
+.auth-form select option:checked,
+.auth-form select option:hover {
+  background: #6366f1;
+  color: white;
+}
 
 .auth-form input::placeholder {
   color: #64748b !important;
@@ -4325,4 +4336,311 @@ body,
 
 .auth-footer a:hover {
   color: #ff00e5 !important;
+}
+
+/* ===== Jobs.jsx modal — forced styling for flat markup ===== */
+
+.job-modal {
+  position: relative !important;
+  padding: 32px !important;
+}
+
+.job-modal .modal-close {
+  position: absolute !important;
+  top: 14px !important;
+  right: 18px !important;
+  width: auto !important;
+  height: auto !important;
+  border: none !important;
+  background: transparent !important;
+  font-size: 28px !important;
+  line-height: 1 !important;
+  color: var(--muted) !important;
+  cursor: pointer !important;
+  padding: 4px 8px !important;
+}
+
+.job-modal .modal-close:hover {
+  color: var(--text-dark) !important;
+}
+
+.job-modal .company-logo {
+  width: 64px !important;
+  height: 64px !important;
+  border-radius: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: linear-gradient(135deg, var(--primary), var(--accent-purple)) !important;
+  color: white !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  margin-bottom: 16px !important;
+}
+
+.job-modal h2 {
+  margin: 0 0 6px !important;
+  font-size: 22px !important;
+  color: var(--text-dark) !important;
+}
+
+.job-modal .company-name {
+  margin: 0 0 16px !important;
+  color: var(--muted) !important;
+  font-size: 14px !important;
+}
+
+.job-modal .job-meta {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 16px !important;
+  margin-bottom: 20px !important;
+  padding-bottom: 20px !important;
+  border-bottom: 1px solid #e5e9ff !important;
+  font-size: 14px !important;
+  color: #475569 !important;
+}
+
+.job-modal h3 {
+  margin: 20px 0 10px !important;
+  font-size: 16px !important;
+  color: var(--primary-dark) !important;
+}
+
+.job-modal > p {
+  margin: 0 0 4px !important;
+  line-height: 1.7 !important;
+  color: #475569 !important;
+  font-size: 14px !important;
+}
+
+.job-modal .skill-list {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+.job-modal .skill-list .skill-tag {
+  padding: 6px 14px !important;
+  background: linear-gradient(135deg, #ede9fe, #e0e7ff) !important;
+  border: 1px solid var(--primary-light) !important;
+  border-radius: 20px !important;
+  font-size: 13px !important;
+  color: var(--primary-dark) !important;
+}
+
+.job-modal > p:has(strong) {
+  padding: 14px 16px !important;
+  margin: 16px 0 20px !important;
+  background: #f4f6ff !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+}
+
+.job-modal .primary-button {
+  width: 100% !important;
+  margin-top: 8px !important;
+}
+
+/* ===== Sidebar layout — make sure bottom section always fits ===== */
+
+.sidebar {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow-y: auto !important;
+  padding-bottom: 20px !important;
+}
+
+.sidebar-menu {
+  flex: 1;
+}
+
+.sidebar-bottom {
+  flex-shrink: 0 !important;
+  margin-top: auto;
+  padding-top: 16px !important;
+}
+
+/* ===== Logout button — proper styled button, not plain text ===== */
+
+.logout-button {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  margin-top: 12px !important;
+  padding: 10px 14px !important;
+  border-radius: 10px !important;
+  background: rgba(248, 113, 113, 0.1) !important;
+  border: 1px solid rgba(248, 113, 113, 0.25) !important;
+  color: #fca5a5 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.logout-button:hover {
+  background: rgba(248, 113, 113, 0.2) !important;
+  border-color: rgba(248, 113, 113, 0.4) !important;
+  transform: translateX(2px);
+}
+
+.sidebar {
+  height: 100vh !important;
+  min-height: 100vh !important;
+  max-height: 100vh !important;
+}
+
+/* ===== Candidates page ===== */
+
+.candidate-filter-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.candidate-filter-row .search-input {
+  flex: 1;
+  min-width: 260px;
+}
+
+.candidate-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.candidate-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  border: 1px solid var(--primary-light);
+  border-radius: 16px;
+  background: #fbfdff;
+  transition: all 0.2s ease;
+  flex-wrap: wrap;
+}
+
+.candidate-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.12);
+  border-color: var(--primary);
+}
+
+.candidate-avatar {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary), var(--accent-purple));
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.candidate-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.candidate-info h3 {
+  margin: 0 0 4px;
+  font-size: 17px;
+  color: var(--text-dark);
+}
+
+.candidate-info > p {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.candidate-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.candidate-skills span {
+  padding: 5px 12px;
+  background: linear-gradient(135deg, #ede9fe, #e0e7ff);
+  border: 1px solid var(--primary-light);
+  border-radius: 16px;
+  font-size: 12px;
+  color: var(--primary-dark);
+}
+
+.match-score,
+.readiness-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  padding: 10px;
+}
+
+.match-score strong {
+  font-size: 22px;
+  color: #16a34a;
+}
+
+.readiness-score strong {
+  font-size: 22px;
+  color: var(--primary-dark);
+}
+
+.match-score span,
+.readiness-score span {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.shortlist-button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--primary), var(--accent-purple));
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.shortlist-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+}
+
+@media (max-width: 900px) {
+  .candidate-card {
+    align-items: flex-start;
+  }
+  .candidate-info {
+    width: 100%;
+  }
+}
+
+.readiness-score {
+  color: white !important;
+}
+
+.readiness-score strong {
+  color: white !important;
+}
+
+.readiness-score span {
+  color: rgba(255, 255, 255, 0.85) !important;
 }

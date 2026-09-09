@@ -1,17 +1,12 @@
 import Company from "../models/Company.js";
 
-// @route   GET /api/company/profile
-// @desc    Get the logged-in company's profile
-// @access  Private (company only)
-const getCompanyProfile = async (req, res, next) => {
+export const getCompanyProfile = async (req, res, next) => {
   try {
-    const company = await Company.findOne({ user: req.user.id }).populate(
-      "user",
-      "name email role"
-    );
+    let company = await Company.findOne({ user: req.user.id });
 
+    // Auto-create an empty profile if one doesn't exist yet
     if (!company) {
-      return res.status(404).json({ message: "Company profile not found" });
+      company = await Company.create({ user: req.user.id });
     }
 
     res.status(200).json({ company });
@@ -20,26 +15,36 @@ const getCompanyProfile = async (req, res, next) => {
   }
 };
 
-// @route   PUT /api/company/profile
-// @desc    Update the logged-in company's profile
-// @access  Private (company only)
-const updateCompanyProfile = async (req, res, next) => {
+export const updateCompanyProfile = async (req, res, next) => {
   try {
-    const fields = ["companyName", "industry", "website", "location", "companySize", "hiringEmail", "contactNumber", "about", "hiringDomains"];
-    const updates = {};
-    fields.forEach((field) => {
-      if (req.body[field] !== undefined) updates[field] = req.body[field];
-    });
+    const {
+      companyName,
+      industry,
+      website,
+      location,
+      companySize,
+      hiringEmail,
+      contactNumber,
+      about,
+      hiringDomains,
+    } = req.body;
 
-    const company = await Company.findOneAndUpdate(
-      { user: req.user.id },
-      updates,
-      { new: true, runValidators: true }
-    );
-
+    let company = await Company.findOne({ user: req.user.id });
     if (!company) {
-      return res.status(404).json({ message: "Company profile not found" });
+      company = new Company({ user: req.user.id });
     }
+
+    if (companyName !== undefined) company.companyName = companyName;
+    if (industry !== undefined) company.industry = industry;
+    if (website !== undefined) company.website = website;
+    if (location !== undefined) company.location = location;
+    if (companySize !== undefined) company.companySize = companySize;
+    if (hiringEmail !== undefined) company.hiringEmail = hiringEmail;
+    if (contactNumber !== undefined) company.contactNumber = contactNumber;
+    if (about !== undefined) company.about = about;
+    if (hiringDomains !== undefined) company.hiringDomains = hiringDomains;
+
+    await company.save();
 
     res.status(200).json({
       message: "Company profile updated successfully",
@@ -49,5 +54,3 @@ const updateCompanyProfile = async (req, res, next) => {
     next(error);
   }
 };
-
-export { getCompanyProfile, updateCompanyProfile };
