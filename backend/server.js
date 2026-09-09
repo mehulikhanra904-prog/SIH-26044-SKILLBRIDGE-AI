@@ -7,7 +7,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import authRoutes from "./routes/authRoutes.js";
-import studentRoutes from "./routes/studentRoutes.js";
+import studentRoutes from "./Routes/studentRoutes.js";
 import companyRoutes from "./routes/companyRoutes.js";
 import collegeRoutes from "./routes/collegeRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
