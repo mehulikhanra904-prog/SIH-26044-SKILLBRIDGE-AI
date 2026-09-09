@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
+import api from "../../services/api";
 
 function CollegeDashboard() {
   return (
@@ -395,5 +397,4 @@ function CollegeDashboard() {
     </div>
   );
 }
-
 export default CollegeDashboard;

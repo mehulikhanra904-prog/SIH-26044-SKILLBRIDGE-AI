@@ -1,46 +1,32 @@
+import dns from "dns";
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 
-// Routes
 import authRoutes from "./routes/authRoutes.js";
-import studentRoutes from "./routes/studentRoutes.js";
+import studentRoutes from "./Routes/studentRoutes.js";
 import companyRoutes from "./routes/companyRoutes.js";
+import collegeRoutes from "./routes/collegeRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import testRoutes from "./routes/testRoutes.js";
-import intelligenceRoutes from "./routes/intelligenceRoutes.js";
+import intelligenceRoutes from "./Routes/intelligenceRoutes.js";
 
-// Middleware
-import {
-  notFound,
-  errorHandler,
-} from "./middleware/errorMiddleware.js";
+import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
 dotenv.config();
 
 const app = express();
 
-// ===============================
-// MIDDLEWARE
-// ===============================
-
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-  })
-);
-
+// Middleware
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ===============================
-// BASIC ROUTE
-// ===============================
-
+// Health check
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -48,28 +34,26 @@ app.get("/", (req, res) => {
   });
 });
 
-// ===============================
-// API ROUTES
-// ===============================
+app.get("/api", (req, res) => {
+  res.json({
+    success: true,
+    message: "SkillBridge AI API is running",
+  });
+});
 
+// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/companies", companyRoutes);
+app.use("/api/colleges", collegeRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/tests", testRoutes);
 app.use("/api/intelligence", intelligenceRoutes);
 
-// ===============================
-// 404 + ERROR HANDLING
-// ===============================
-
+// Error handling
 app.use(notFound);
 app.use(errorHandler);
-
-// ===============================
-// MONGODB CONNECTION
-// ===============================
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
@@ -79,17 +63,17 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
+// Start server
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
+
+// MongoDB connection
 mongoose
   .connect(MONGO_URI)
   .then(() => {
     console.log("✅ MongoDB connected successfully");
-
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-    });
   })
   .catch((error) => {
-    console.error("❌ MongoDB connection failed:");
-    console.error(error.message);
-    process.exit(1);
+    console.error("❌ MongoDB connection failed:", error.message);
   });

@@ -1,372 +1,42 @@
+import { useEffect, useMemo, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
-
-const applications = [
-  {
-    id: 1,
-    name: "Aarav Sharma",
-    role: "Full Stack Developer",
-    skills: "React · Node.js · MongoDB · Git",
-    match: 94,
-    status: "Shortlisted",
-    avatar: "A",
-  },
-  {
-    id: 2,
-    name: "Priya Das",
-    role: "AI / ML Engineer",
-    skills: "Python · Machine Learning · TensorFlow",
-    match: 91,
-    status: "Interview",
-    avatar: "P",
-  },
-  {
-    id: 3,
-    name: "Sneha Roy",
-    role: "Web Developer Intern",
-    skills: "HTML · CSS · JavaScript · React",
-    match: 87,
-    status: "Applied",
-    avatar: "S",
-  },
-  {
-    id: 4,
-    name: "Rahul Sen",
-    role: "Full Stack Developer",
-    skills: "React · Node.js · Express · MongoDB",
-    match: 85,
-    status: "Shortlisted",
-    avatar: "R",
-  },
-  {
-    id: 5,
-    name: "Ananya Gupta",
-    role: "Data Analyst",
-    skills: "Python · SQL · Power BI · Excel",
-    match: 82,
-    status: "Applied",
-    avatar: "A",
-  },
-];
+import api from "../../services/api";
 
 function CompanyApplications() {
-  return (
-    <div className="dashboard-layout">
-
-      <Sidebar type="company" />
-
-      <main className="main-content">
-
-        <Navbar
-          title="Applications"
-          subtitle="Review candidates and manage your hiring pipeline."
-        />
-
-        {/* Header */}
-
-        <div className="page-actions">
-
-          <div>
-            <h2 className="page-heading">
-              Candidate Applications
-            </h2>
-
-            <p className="page-subtitle">
-              Review applications received for your job postings.
-            </p>
-          </div>
-
-        </div>
-
-
-        {/* Statistics */}
-
-        <div className="stats-grid">
-
-          <div className="stat-card">
-
-            <div className="stat-card-header">
-
-              <span className="stat-label">
-                Total Applications
-              </span>
-
-              <div className="stat-icon">
-                A
-              </div>
-
-            </div>
-
-            <div className="stat-value">
-              486
-            </div>
-
-            <p className="stat-description">
-              Applications received
-            </p>
-
-          </div>
-
-
-          <div className="stat-card">
-
-            <div className="stat-card-header">
-
-              <span className="stat-label">
-                Shortlisted
-              </span>
-
-              <div className="stat-icon">
-                ✓
-              </div>
-
-            </div>
-
-            <div className="stat-value">
-              128
-            </div>
-
-            <p className="stat-description">
-              Candidates shortlisted
-            </p>
-
-          </div>
-
-
-          <div className="stat-card">
-
-            <div className="stat-card-header">
-
-              <span className="stat-label">
-                Interviews
-              </span>
-
-              <div className="stat-icon">
-                I
-              </div>
-
-            </div>
-
-            <div className="stat-value">
-              64
-            </div>
-
-            <p className="stat-description">
-              Candidates interviewed
-            </p>
-
-          </div>
-
-
-          <div className="stat-card">
-
-            <div className="stat-card-header">
-
-              <span className="stat-label">
-                Selected
-              </span>
-
-              <div className="stat-icon">
-                ★
-              </div>
-
-            </div>
-
-            <div className="stat-value">
-              28
-            </div>
-
-            <p className="stat-description">
-              Candidates selected
-            </p>
-
-          </div>
-
-        </div>
-
-
-        {/* Filters */}
-
-        <div className="card">
-
-          <div className="job-filter-row">
-
-            <input
-              className="search-input"
-              type="text"
-              placeholder="Search candidates, skills or jobs..."
-            />
-
-            <select className="filter-select">
-
-              <option>
-                All Jobs
-              </option>
-
-              <option>
-                Full Stack Developer
-              </option>
-
-              <option>
-                AI / ML Engineer
-              </option>
-
-              <option>
-                Web Developer Intern
-              </option>
-
-              <option>
-                Data Analyst
-              </option>
-
-            </select>
-
-            <select className="filter-select">
-
-              <option>
-                All Status
-              </option>
-
-              <option>
-                Applied
-              </option>
-
-              <option>
-                Shortlisted
-              </option>
-
-              <option>
-                Interview
-              </option>
-
-              <option>
-                Selected
-              </option>
-
-            </select>
-
-          </div>
-
-        </div>
-
-
-        {/* Applications */}
-
-        <div className="card">
-
-          <div className="section-title">
-
-            <h2>
-              Recent Applications
-            </h2>
-
-            <span>
-              486 Applications
-            </span>
-
-          </div>
-
-
-          <div className="candidate-list">
-
-            {applications.map((application) => (
-
-              <div
-                className="candidate-item"
-                key={application.id}
-              >
-
-                <div className="student-avatar">
-                  {application.avatar}
-                </div>
-
-
-                <div className="candidate-info">
-
-                  <strong>
-                    {application.name}
-                  </strong>
-
-                  <p>
-                    {application.role}
-                  </p>
-
-                  <small>
-                    {application.skills}
-                  </small>
-
-                </div>
-
-
-                <div className="job-meta">
-
-                  <strong>
-                    {application.match}%
-                  </strong>
-
-                  <span>
-                    AI Match
-                  </span>
-
-                </div>
-
-
-                <span className="job-status">
-                  {application.status}
-                </span>
-
-
-                <div className="job-actions">
-
-                  <button className="secondary-button">
-                    View
-                  </button>
-
-                  <button className="primary-button">
-                    Review
-                  </button>
-
-                </div>
-
-              </div>
-
-            ))}
-
-          </div>
-
-        </div>
-
-
-        {/* AI Insight */}
-
-        <div className="ai-info">
-
-          <div className="ai-info-icon">
-            ✦
-          </div>
-
-          <div>
-
-            <strong>
-              AI Candidate Insight
-            </strong>
-
-            <p>
-              SkillBridge AI has identified several highly
-              matched candidates based on their skills,
-              projects, experience and job requirements.
-              Candidates with an 85%+ match should be
-              prioritized for review.
-            </p>
-
-          </div>
-
-        </div>
-
-      </main>
-
-    </div>
-  );
+  const [applications, setApplications] = useState([]);
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
+  const [job, setJob] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    api.get("/applications/company")
+      .then(({ data }) => setApplications(data.applications || []))
+      .catch((err) => setError(err.response?.data?.message || "Unable to load applications."));
+  }, []);
+
+  const filtered = useMemo(() => applications.filter((item) => {
+    const text = search.trim().toLowerCase();
+    const haystack = [item.student?.name, item.student?.email, item.student?.collegeName, item.student?.course, item.job?.title, ...(item.student?.skills || [])].join(" ").toLowerCase();
+    return (!text || haystack.includes(text)) && (!status || item.status === status) && (!job || item.job?.title === job);
+  }), [applications, search, status, job]);
+
+  const counts = {
+    total: applications.length,
+    shortlisted: applications.filter((a) => a.status === "shortlisted").length,
+    interviews: applications.filter((a) => a.status === "interview").length,
+    selected: applications.filter((a) => a.status === "selected").length,
+  };
+  const jobs = [...new Set(applications.map((a) => a.job?.title).filter(Boolean))];
+
+  return <div className="dashboard-layout"><Sidebar type="company" /><main className="main-content">
+    <Navbar title="Applications" subtitle="Review candidates and manage your hiring pipeline." />
+    {error && <div className="error-message">{error}</div>}
+    <div className="stats-grid">{[['Total Applications', counts.total], ['Shortlisted', counts.shortlisted], ['Interviews', counts.interviews], ['Selected', counts.selected]].map(([label, value]) => <div className="stat-card" key={label}><span className="stat-label">{label}</span><div className="stat-value">{value}</div><p className="stat-description">From your job postings</p></div>)}</div>
+    <div className="card"><div className="job-filter-row"><input className="search-input" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search candidates, skills or jobs..." /><select className="filter-select" value={job} onChange={(e) => setJob(e.target.value)}><option value="">All Jobs</option>{jobs.map((value) => <option key={value}>{value}</option>)}</select><select className="filter-select" value={status} onChange={(e) => setStatus(e.target.value)}><option value="">All Status</option>{["under_review", "shortlisted", "interview", "selected", "rejected"].map((value) => <option key={value} value={value}>{value.replace("_", " ")}</option>)}</select></div></div>
+    <div className="card"><div className="section-title"><h2>Applications</h2><span>{filtered.length} Applications</span></div><div className="candidate-list">{filtered.length ? filtered.map((application) => { const student = application.student || {}; return <div className="candidate-item" key={application.id}><div className="student-avatar">{(student.name || "Student").split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase()}</div><div className="candidate-info"><strong>{student.name || "Student"}</strong><p>{application.job?.title || "Job"}</p><small>{(student.skills || []).join(" · ") || "No skills listed"}</small></div><div className="job-meta"><strong>{application.matchScore || 0}%</strong><span>Skill Match</span></div><span className="job-status">{application.status}</span></div>; }) : <div className="no-results"><h3>No Applications Found</h3><p>Applications submitted to your published jobs will appear here.</p></div>}</div></div>
+  </main></div>;
 }
 
 export default CompanyApplications;
