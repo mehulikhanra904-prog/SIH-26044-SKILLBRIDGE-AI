@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import Student from "../models/Student.js";
+import { buildSkillEvidence } from "../intelligence/skillEvidence.js";
 
 const roleRequirements = {
   "Full Stack Developer": ["React", "Node.js", "REST APIs", "Docker", "Git"],
@@ -20,16 +21,33 @@ const getOrCreateStudentProfile = (userId) =>
 const analyzeSkills = async (req, res, next) => {
   try {
     const student = await getOrCreateStudentProfile(req.user.id);
-    const role = roleRequirements[req.query.role] ? req.query.role : "Full Stack Developer";
-    const currentSkills = new Set((student.skills || []).map(normalize));
-    const skills = roleRequirements[role].map((name) => {
-      const present = currentSkills.has(normalize(name));
-      return { name, required: "Industry relevant", progress: present ? 100 : 0, status: present ? "Strong" : "Skill Gap", className: present ? "strong" : "missing" };
+    const role = roleRequirements[req.query.role]
+      ? req.query.role
+      : "Full Stack Developer";
+    const evidence = buildSkillEvidence(role, student.skills || []);
+    const missing = evidence.missing;
+
+    return res.json({
+      ...evidence,
+      message: evidence.score >= 80
+        ? "Strong profile coverage"
+        : evidence.score >= 50
+          ? "Some important skills are not listed yet"
+          : "Your profile needs more role-specific evidence",
+      description: missing.length
+        ? `Your profile does not currently list ${missing.map((skill) => skill.name).join(", ")}. Add a skill only after gaining practical experience.`
+        : "All listed role requirements appear in your saved profile. Validate them with projects and practical assessments.",
+      recommendations: missing.map((skill) => ({
+        title: `Build evidence for ${skill.name}`,
+        description: skill.priority === "critical"
+          ? `Prioritize ${skill.name}. Add a small, demonstrable project or practical exercise before marking it as a strength.`
+          : `Practice ${skill.name} and attach a project, coursework, or work sample to your profile.`,
+        priority: skill.priority,
+      })),
     });
-    const score = Math.round((skills.filter((skill) => skill.progress > 0).length / skills.length) * 100);
-    const missing = skills.filter((skill) => !currentSkills.has(normalize(skill.name)));
-    return res.json({ role, score, message: score >= 80 ? "Strong Progress" : score >= 50 ? "Good Progress" : "Needs Improvement", description: missing.length ? `Add or strengthen ${missing.map((skill) => skill.name).join(", ")} to improve your readiness for this role.` : "Your saved profile skills cover the current requirements for this role.", skills, recommendations: missing.map((skill) => ({ title: `Learn ${skill.name}`, description: `Add practical ${skill.name} experience through a project, course, or application.` })) });
-  } catch (error) { return next(error); }
+  } catch (error) {
+    return next(error);
+  }
 };
 
 const getCareerRoadmap = async (req, res, next) => {
