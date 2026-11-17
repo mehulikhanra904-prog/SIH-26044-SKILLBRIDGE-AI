@@ -2,6 +2,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
+import Landing from "./pages/Landing";
 import Register from "./pages/Register";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import StudentProfile from "./pages/student/StudentProfile";
@@ -36,7 +37,8 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/student" element={secured("student", <StudentDashboard />)} />
           <Route path="/student/profile" element={secured("student", <StudentProfile />)} />
