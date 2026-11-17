@@ -31,7 +31,7 @@ function Register() {
       login(res.data.user, res.data.token);
 
       // Go to login page
-      navigate("/");
+      navigate("/login", { replace: true });
 
     } catch (err) {
 
