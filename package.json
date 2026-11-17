@@ -1,9 +1,11 @@
 {
-  "name": "frontend",
+  "name": "skillbridge-frontend",
   "private": true,
   "type": "module",
-  "version": "0.0.0",
-  
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -33,18 +35,5 @@
     "eslint-plugin-react-refresh": "^0.5.4",
     "globals": "^17.11.0",
     "vite": "^8.2.2"
-  },
-  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
-  "main": "eslint.config.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mehulikhanra904-prog/SIH-26044-SKILLBRIDGE-AI.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/mehulikhanra904-prog/SIH-26044-SKILLBRIDGE-AI/issues"
-  },
-  "homepage": "https://github.com/mehulikhanra904-prog/SIH-26044-SKILLBRIDGE-AI#readme"
+  }
 }
