@@ -50,24 +50,83 @@ const analyzeSkills = async (req, res, next) => {
   }
 };
 
+const ROLE_PROJECTS = {
+  "Full Stack Developer": "Build and deploy a role-based application with authentication, REST APIs, database persistence, validation, and tests.",
+  "AI / ML Engineer": "Build a reproducible ML project with a documented dataset, baseline, evaluation metrics, error analysis, and inference API.",
+  "Data Scientist": "Complete an end-to-end analysis with data cleaning, exploratory analysis, statistical reasoning, visualizations, and a concise findings report.",
+  "Frontend Developer": "Build an accessible, responsive interface with reusable components, form validation, loading/error states, and performance checks.",
+};
+
 const getCareerRoadmap = async (req, res, next) => {
   try {
     const student = await getOrCreateStudentProfile(req.user.id);
-    const role = roleRequirements[req.query.role] ? req.query.role : (roleRequirements[student.preferredRole] ? student.preferredRole : "Full Stack Developer");
-    const currentSkills = new Set((student.skills || []).map(normalize));
+    const role = roleRequirements[req.query.role]
+      ? req.query.role
+      : (roleRequirements[student.preferredRole] ? student.preferredRole : "Full Stack Developer");
+    const evidence = buildSkillEvidence(role, student.skills || []);
+    const priorities = evidence.missing;
+
     const stages = [
-      { title: "Core Foundations", skills: role === "Frontend Developer" ? ["HTML", "CSS", "JavaScript"] : ["JavaScript", "Git"] },
-      { title: "Role Fundamentals", skills: roleRequirements[role].slice(0, 2) },
-      { title: "Production Skills", skills: roleRequirements[role].slice(2, 4) },
-      { title: "Portfolio Project", skills: ["Projects", "Documentation"] },
-    ].map((stage) => {
-      const matched = stage.skills.filter((skill) => currentSkills.has(normalize(skill))).length;
-      const progress = Math.round((matched / stage.skills.length) * 100);
-      return { ...stage, progress, status: progress === 100 ? "Completed" : progress > 0 ? "In Progress" : "Upcoming", description: progress === 100 ? "Your saved profile shows these skills are covered." : `Build practical experience with ${stage.skills.join(", ")}.` };
+      {
+        title: "Validate your starting point",
+        description: "Review the skills detected from your profile. Add only skills you can demonstrate with coursework, projects, or practical work.",
+        skills: evidence.skills.filter((skill) => skill.progress).map((skill) => skill.name),
+        progress: evidence.matchedCount === evidence.totalCount ? 100 : 0,
+        status: evidence.matchedCount === evidence.totalCount ? "Completed" : "In Progress",
+        action: "Update your profile with accurate skill evidence.",
+        estimatedEffort: "30–60 minutes",
+      },
+      ...priorities.map((skill) => ({
+        title: `Develop ${skill.name}`,
+        description: skill.priority === "critical"
+          ? "This is a high-priority requirement for the selected role. Learn the fundamentals and practise with a focused exercise."
+          : "Build practical familiarity and connect this skill to a small, demonstrable task.",
+        skills: [skill.name],
+        progress: 0,
+        status: "Upcoming",
+        action: `Complete a practical exercise in ${skill.name} and add the evidence to your profile.`,
+        estimatedEffort: skill.priority === "critical" ? "2–3 weeks" : "1–2 weeks",
+      })),
+      {
+        title: "Build a role-relevant portfolio project",
+        description: ROLE_PROJECTS[role],
+        skills: ["Project work", "Documentation", "Testing"],
+        progress: 0,
+        status: "Upcoming",
+        action: "Publish a working demo and document the decisions, trade-offs, and limitations.",
+        estimatedEffort: "2–4 weeks",
+      },
+      {
+        title: "Check job-readiness with evidence",
+        description: "Review a real job description, map each requirement to a project or practical example, and identify remaining gaps.",
+        skills: ["Portfolio review", "Interview practice"],
+        progress: 0,
+        status: "Upcoming",
+        action: "Prepare two project walkthroughs and practise role-specific technical questions.",
+        estimatedEffort: "1 week",
+      },
+    ];
+
+    const nextStage = stages.find((stage) => stage.status !== "Completed") || stages[stages.length - 1];
+
+    return res.json({
+      role,
+      readiness: evidence.score,
+      readinessLabel: "Profile coverage",
+      readinessDisclaimer: evidence.scoreDisclaimer,
+      matchedSkills: evidence.skills.filter((skill) => skill.progress).map((skill) => skill.name),
+      priorityGaps: priorities.map(({ name, priority }) => ({ name, priority })),
+      stages,
+      nextStep: {
+        title: nextStage.title,
+        description: nextStage.action,
+        skills: nextStage.skills,
+        estimatedEffort: nextStage.estimatedEffort,
+      },
     });
-    const nextStage = stages.find((stage) => stage.progress < 100) || stages[stages.length - 1];
-    return res.json({ role, readiness: Math.round(stages.reduce((total, stage) => total + stage.progress, 0) / stages.length), stages, nextStep: nextStage });
-  } catch (error) { return next(error); }
+  } catch (error) {
+    return next(error);
+  }
 };
 
 const formatStudent = (user, student) => ({
