@@ -36,7 +36,7 @@ function hasSkill(profileSkills, requiredSkill) {
   const aliases = SKILL_ALIASES[normalize(requiredSkill)] || [normalize(requiredSkill)];
   return profileSkills.some((savedSkill) => {
     const candidate = normalize(savedSkill);
-    return aliases.some((alias) => candidate === alias || candidate.includes(alias));
+    return aliases.some((alias) => candidate === alias);
   });
 }
 
