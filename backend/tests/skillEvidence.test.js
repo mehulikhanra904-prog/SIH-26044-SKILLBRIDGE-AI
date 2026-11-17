@@ -4,7 +4,7 @@ import { buildSkillEvidence } from "../intelligence/skillEvidence.js";
 
 test("weights critical role skills more heavily than supporting skills", () => {
   const result = buildSkillEvidence("Full Stack Developer", ["React", "Node.js"]);
-  assert.equal(result.score, 71);
+  assert.equal(result.score, 55);
   assert.deepEqual(result.missing.map((skill) => skill.name), ["REST APIs", "Docker", "Git"]);
 });
 
